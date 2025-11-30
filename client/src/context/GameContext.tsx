@@ -41,9 +41,9 @@ function gameReducer(state: GameState, action: GameAction): GameState {
           connected: true,
           address: '0x71C...9A21',
           balances: {
-            USDT: 1000, // Mock balance upon connection
-            ETH: 5.5,   // Mock balance upon connection
-            TON: 500    // Mock balance upon connection
+            USDT: 100, // Mock balance upon connection
+            ETH: 0.2,   // Mock balance upon connection
+            TON: 50    // Mock balance upon connection
           }
         }
       };

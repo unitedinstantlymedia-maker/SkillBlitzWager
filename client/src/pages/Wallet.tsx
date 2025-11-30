@@ -64,7 +64,7 @@ export default function Wallet() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Your Balances</h2>
-          <span className="text-[10px] font-mono text-primary/70 border border-primary/30 px-2 py-1 rounded">SIMULATED (PROTOTYPE)</span>
+          <span className="text-[10px] font-mono text-primary/70 border border-primary/30 px-2 py-1 rounded">Test mode (simulated)</span>
         </div>
         
         {(['USDT', 'ETH', 'TON'] as const).map((asset) => (
