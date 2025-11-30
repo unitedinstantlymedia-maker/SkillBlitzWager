@@ -1,34 +1,33 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useReducer } from 'react';
 import { 
   GameState, 
   GameAction, 
-  GameType, 
-  AssetType, 
   UserWallet,
   PLATFORM_FEE_PERCENT 
 } from '../lib/types';
 
-// --- Mock Adapters ---
-const mockWallet: UserWallet = {
-  connected: false,
-  address: null,
-  balances: {
-    USDT: 1000,
-    ETH: 5.5,
-    TON: 500
-  }
-};
-
-const generateMatchId = () => Math.random().toString(36).substring(7);
-
 // --- Initial State ---
+// Balances start at 0, simulated wallet connection will populate them
 const initialState: GameState = {
   selectedGame: null,
   selectedAsset: 'USDT',
   stakeAmount: 20,
-  wallet: mockWallet,
+  wallet: {
+    connected: false,
+    address: null,
+    balances: {
+      USDT: 0,
+      ETH: 0,
+      TON: 0
+    }
+  },
   currentMatch: null,
-  history: []
+  history: [],
+  platformFeesCollected: {
+    USDT: 0,
+    ETH: 0,
+    TON: 0
+  }
 };
 
 // --- Reducer ---
@@ -40,7 +39,12 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         wallet: {
           ...state.wallet,
           connected: true,
-          address: '0x71C...9A21'
+          address: '0x71C...9A21',
+          balances: {
+            USDT: 1000, // Mock balance upon connection
+            ETH: 5.5,   // Mock balance upon connection
+            TON: 500    // Mock balance upon connection
+          }
         }
       };
     case 'SELECT_GAME':
@@ -81,13 +85,17 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       const fee = (pot * PLATFORM_FEE_PERCENT) / 100;
       const payout = result === 'win' ? pot - fee : 0;
       
-      // Update balances
+      // Update user balances
       const newBalances = { ...state.wallet.balances };
       if (result === 'win') {
         newBalances[state.selectedAsset] += (payout - stake); // Net gain
       } else {
         newBalances[state.selectedAsset] -= stake; // Loss
       }
+
+      // Update platform fees
+      const newFees = { ...state.platformFeesCollected };
+      newFees[state.selectedAsset] += fee;
 
       const historyItem = {
         id: state.currentMatch.id,
@@ -114,7 +122,8 @@ function gameReducer(state: GameState, action: GameAction): GameState {
           payout,
           fee
         },
-        history: [historyItem, ...state.history]
+        history: [historyItem, ...state.history],
+        platformFeesCollected: newFees
       };
       
     case 'RESET_MATCH':

@@ -1,35 +1,72 @@
 import { useGame } from "@/context/GameContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Copy, Wallet as WalletIcon, ArrowUpRight, ArrowDownLeft } from "lucide-react";
+import { Copy, Wallet as WalletIcon, ShieldCheck } from "lucide-react";
+import { PLATFORM_COLD_WALLET_ADDRESS } from "@/lib/types";
 
 export default function Wallet() {
-  const { state } = useGame();
-  const { wallet } = state;
+  const { state, dispatch } = useGame();
+  const { wallet, platformFeesCollected } = state;
+
+  const handleConnect = () => {
+    dispatch({ type: 'CONNECT_WALLET' });
+  };
+
+  if (!wallet.connected) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6 text-center">
+        <div className="relative">
+          <div className="absolute inset-0 rounded-full bg-primary/20 blur-xl animate-pulse" />
+          <div className="relative h-20 w-20 rounded-full bg-card border border-white/10 flex items-center justify-center">
+            <WalletIcon className="h-10 w-10 text-primary" />
+          </div>
+        </div>
+        
+        <div className="space-y-2">
+          <h1 className="text-3xl font-display font-bold uppercase tracking-wider">Connect Wallet</h1>
+          <p className="text-muted-foreground max-w-xs mx-auto">
+            Connect your non-custodial wallet to play. No registration required.
+          </p>
+        </div>
+
+        <Button 
+          onClick={handleConnect}
+          className="h-14 px-8 text-lg font-display font-bold uppercase tracking-widest bg-primary text-primary-foreground hover:bg-primary/90 border-glow"
+        >
+          Connect Now
+        </Button>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-display font-bold uppercase tracking-wider">Wallet</h1>
+    <div className="space-y-8">
+      <h1 className="text-2xl font-display font-bold uppercase tracking-wider">My Wallet</h1>
 
-      <Card className="bg-gradient-to-br from-primary/20 to-card border-primary/30">
+      {/* Connected Status */}
+      <Card className="bg-gradient-to-br from-primary/10 to-card border-primary/30">
         <CardHeader className="pb-2">
           <div className="flex justify-between items-start">
             <div className="space-y-1">
-              <CardTitle className="text-sm text-muted-foreground uppercase tracking-wider">Connected Address</CardTitle>
-              <div className="flex items-center gap-2 font-mono text-lg">
-                {wallet.connected ? wallet.address : 'Not Connected'}
-                {wallet.connected && <Copy className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-white" />}
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4 text-primary" />
+                <CardTitle className="text-sm text-primary font-bold uppercase tracking-wider">Connected Securely</CardTitle>
               </div>
-            </div>
-            <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center">
-              <WalletIcon className="h-5 w-5 text-primary" />
+              <div className="flex items-center gap-2 font-mono text-lg text-white">
+                {wallet.address}
+                <Copy className="h-4 w-4 text-muted-foreground cursor-pointer hover:text-white" />
+              </div>
             </div>
           </div>
         </CardHeader>
       </Card>
 
+      {/* User Balances */}
       <div className="space-y-4">
-        <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Assets</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Your Balances</h2>
+          <span className="text-[10px] font-mono text-primary/70 border border-primary/30 px-2 py-1 rounded">SIMULATED (PROTOTYPE)</span>
+        </div>
         
         {(['USDT', 'ETH', 'TON'] as const).map((asset) => (
           <Card key={asset} className="bg-card/50 border-white/10">
@@ -52,13 +89,28 @@ export default function Wallet() {
         ))}
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <Button className="h-12 bg-white/5 hover:bg-white/10 border-white/10">
-          <ArrowDownLeft className="mr-2 h-4 w-4" /> Deposit
-        </Button>
-        <Button className="h-12 bg-white/5 hover:bg-white/10 border-white/10">
-          <ArrowUpRight className="mr-2 h-4 w-4" /> Withdraw
-        </Button>
+      {/* Platform Fees (Transparency) */}
+      <div className="space-y-4 pt-6 border-t border-white/5">
+        <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Platform Fees Collected</h2>
+        <Card className="bg-black/40 border-white/5">
+          <CardContent className="p-4 space-y-4">
+            <div className="space-y-2">
+              <p className="text-xs text-muted-foreground font-mono uppercase">Destination (Cold Wallet)</p>
+              <div className="font-mono text-xs text-white/70 bg-white/5 p-2 rounded break-all">
+                {PLATFORM_COLD_WALLET_ADDRESS}
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-3 gap-2">
+              {(['USDT', 'ETH', 'TON'] as const).map((asset) => (
+                <div key={asset} className="text-center p-2 rounded bg-white/5">
+                  <div className="text-[10px] text-muted-foreground mb-1">{asset}</div>
+                  <div className="font-mono text-sm font-bold text-accent">{platformFeesCollected[asset].toFixed(4)}</div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
