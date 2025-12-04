@@ -2,7 +2,7 @@ import { useGame } from "@/context/GameContext";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Trophy, XCircle, ArrowRight } from "lucide-react";
+import { Trophy, XCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
 import { useLocation } from "wouter";

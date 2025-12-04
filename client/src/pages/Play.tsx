@@ -6,7 +6,7 @@ import { CheckersGame } from "@/components/games/CheckersGame";
 import { useEffect } from "react";
 
 export default function Play() {
-  const { state, dispatch } = useGame();
+  const { state, actions } = useGame();
   const [, setLocation] = useLocation();
 
   useEffect(() => {
@@ -15,8 +15,8 @@ export default function Play() {
     }
   }, [state.currentMatch, setLocation]);
 
-  const handleFinish = (result: 'win' | 'loss') => {
-    dispatch({ type: 'FINISH_GAME', payload: { result } });
+  const handleFinish = async (result: 'win' | 'loss') => {
+    await actions.finishMatch(result);
     setLocation('/result');
   };
 

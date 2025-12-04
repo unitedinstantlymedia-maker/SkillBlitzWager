@@ -53,7 +53,8 @@ export type GameAction =
   | { type: 'START_MATCH'; payload: { id: string } }
   | { type: 'FOUND_OPPONENT'; payload: { opponent: string } }
   | { type: 'FINISH_GAME'; payload: { result: 'win' | 'loss' } }
-  | { type: 'RESET_MATCH' };
+  | { type: 'RESET_MATCH' }
+  | { type: 'UPDATE_BALANCES'; payload: Record<AssetType, number> };
 
 export const STAKE_PRESETS = [5, 20, 50, 100];
 export const PLATFORM_FEE_PERCENT = 3;

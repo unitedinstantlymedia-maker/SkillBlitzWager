@@ -4,11 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Copy, Wallet as WalletIcon, ShieldCheck } from "lucide-react";
 
 export default function Wallet() {
-  const { state, dispatch } = useGame();
-  const { wallet, platformFeesCollected } = state;
+  const { state, actions } = useGame();
+  const { wallet } = state;
 
-  const handleConnect = () => {
-    dispatch({ type: 'CONNECT_WALLET' });
+  const handleConnect = async () => {
+    await actions.connectWallet();
   };
 
   if (!wallet.connected) {
