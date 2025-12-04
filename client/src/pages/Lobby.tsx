@@ -1,29 +1,28 @@
 import { useGame } from "@/context/GameContext";
-import { AssetType, STAKE_PRESETS } from "@/lib/types";
+import { STAKE_PRESETS } from "@/config/economy";
+import { Asset } from "@/core/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useLocation } from "wouter";
 import { useState } from "react";
-import { ArrowLeft, Coins, Zap, Info } from "lucide-react";
+import { ArrowLeft, Coins, Zap, Info, Loader2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from "wouter";
-import { escrowAdapter } from "@/core/escrow/EscrowAdapter";
-import { SUPPORTED_ASSETS } from "@/config/escrow";
+import { mockEscrowAdapter } from "@/core/escrow/MockEscrowAdapter";
 
 export default function Lobby() {
-  const { state, dispatch, actions } = useGame();
+  const { state, actions } = useGame();
   const [, setLocation] = useLocation();
   const [customStake, setCustomStake] = useState<string>("");
-  const [isFinding, setIsFinding] = useState(false);
 
   const handleAssetChange = (value: string) => {
-    if (value) dispatch({ type: 'SELECT_ASSET', payload: value as AssetType });
+    if (value) actions.selectAsset(value as Asset);
   };
 
   const handleStakeChange = (amount: number) => {
-    dispatch({ type: 'SET_STAKE', payload: amount });
+    actions.setStake(amount);
     setCustomStake("");
   };
 
@@ -31,22 +30,33 @@ export default function Lobby() {
     const val = e.target.value;
     setCustomStake(val);
     if (val && !isNaN(Number(val))) {
-      dispatch({ type: 'SET_STAKE', payload: Number(val) });
+      actions.setStake(Number(val));
     }
   };
 
-  const handleFindMatch = async () => {
-    if (!state.selectedGame) return;
-    setIsFinding(true);
-    await actions.startMatch();
-    setIsFinding(false);
-    setLocation('/match');
+  const handleStartSearch = async () => {
+    await actions.startSearch();
+    // If match found immediately, effect in GameContext will update currentMatch
+    // We should watch currentMatch to navigate
   };
 
-  const networkFee = escrowAdapter.getEstimatedNetworkFee(state.selectedAsset);
+  const handleCancelSearch = () => {
+    actions.cancelSearch();
+  };
+
+  // Navigate to play if match active
+  if (state.currentMatch && state.currentMatch.status === 'active') {
+    setLocation(`/play/${state.selectedGame?.toLowerCase()}`);
+    return null; 
+  }
+
+  const networkFee = mockEscrowAdapter.getEstimatedNetworkFee(state.selectedAsset);
   const totalCost = state.stakeAmount + networkFee;
-  const isBalanceSufficient = state.wallet.balances[state.selectedAsset] >= totalCost;
-  const isTon = state.selectedAsset === 'TON';
+  
+  // FIX: Ensure we check the correct balance for the selected asset
+  const currentBalance = state.wallet.balances[state.selectedAsset] || 0;
+  const isBalanceSufficient = currentBalance >= totalCost;
+  const isTon = state.selectedAsset === 'TON'; // TON is coming soon
 
   return (
     <div className="space-y-8">
@@ -67,22 +77,24 @@ export default function Lobby() {
         <div className="space-y-3">
           <label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Select Asset</label>
           <ToggleGroup type="single" value={state.selectedAsset} onValueChange={handleAssetChange} className="justify-start gap-3">
-            {(['USDT', 'ETH', 'TON'] as AssetType[]).map((asset) => (
+            {(['USDT', 'ETH', 'TON'] as Asset[]).map((asset) => (
               <ToggleGroupItem 
                 key={asset} 
                 value={asset}
-                disabled={SUPPORTED_ASSETS[asset].comingSoon}
+                disabled={asset === 'TON'}
                 className="h-12 px-6 border border-white/10 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary/50 rounded-lg transition-all relative"
               >
                 {asset}
-                {SUPPORTED_ASSETS[asset].comingSoon && (
+                {asset === 'TON' && (
                   <span className="absolute -top-2 -right-2 text-[8px] bg-accent text-accent-foreground px-1.5 py-0.5 rounded-full uppercase font-bold">Soon</span>
                 )}
               </ToggleGroupItem>
             ))}
           </ToggleGroup>
           <p className="text-xs font-mono text-muted-foreground ml-1">
-            Balance: <span className="text-white">{state.wallet.balances[state.selectedAsset].toFixed(4)} {state.selectedAsset}</span>
+            Balance: <span className={isBalanceSufficient ? "text-white" : "text-destructive font-bold"}>
+              {currentBalance.toFixed(4)} {state.selectedAsset}
+            </span>
           </p>
         </div>
 
@@ -151,19 +163,35 @@ export default function Lobby() {
           </div>
         </Card>
 
-        <Button 
-          onClick={handleFindMatch}
-          disabled={!isBalanceSufficient || state.stakeAmount <= 0 || isTon || isFinding}
-          className="w-full h-14 text-lg font-display font-bold uppercase tracking-widest bg-primary text-primary-foreground hover:bg-primary/90 border-glow disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isFinding ? "Initializing..." : isBalanceSufficient ? (
-            <>
-              <Zap className="mr-2 h-5 w-5" /> Find Match
-            </>
-          ) : (
-            "Insufficient Balance"
-          )}
-        </Button>
+        {state.isFinding ? (
+          <Button 
+            onClick={handleCancelSearch}
+            variant="destructive"
+            className="w-full h-14 text-lg font-display font-bold uppercase tracking-widest border-glow animate-pulse"
+          >
+            <X className="mr-2 h-5 w-5" /> Cancel Search
+          </Button>
+        ) : (
+          <Button 
+            onClick={handleStartSearch}
+            disabled={!isBalanceSufficient || state.stakeAmount <= 0 || isTon}
+            className="w-full h-14 text-lg font-display font-bold uppercase tracking-widest bg-primary text-primary-foreground hover:bg-primary/90 border-glow disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isBalanceSufficient ? (
+              <>
+                <Zap className="mr-2 h-5 w-5" /> Find Match
+              </>
+            ) : (
+              "Insufficient Balance"
+            )}
+          </Button>
+        )}
+        
+        {state.isFinding && (
+           <div className="text-center text-xs text-muted-foreground animate-pulse">
+             Searching for opponent... ({state.selectedAsset} {state.stakeAmount})
+           </div>
+        )}
       </div>
     </div>
   );
