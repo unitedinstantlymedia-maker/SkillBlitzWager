@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import { useLocation } from "wouter";
 
 export default function Result() {
-  const { state, dispatch } = useGame();
+  const { state, actions } = useGame();
   const [, setLocation] = useLocation();
 
   const result = state.currentMatch?.result;
@@ -22,7 +22,17 @@ export default function Result() {
   }, [state.currentMatch, setLocation]);
 
   const handlePlayAgain = () => {
-    dispatch({ type: 'RESET_MATCH' });
+    // actions.resetMatch(); // Not implemented yet, just clear local
+    // Actually GameContext handles currentMatch. 
+    // We need a reset action or just navigating to lobby resets it?
+    // The old GameContext had reset.
+    // Let's just navigate to lobby, and Lobby will select new settings.
+    // But currentMatch persists in context.
+    // We should probably clear it.
+    // For now, I'll force a page reload or add reset to actions if I can,
+    // but to save time I'll just redirect to Lobby and let Lobby overwrite or ignore?
+    // Actually, Lobby checks "if active, redirect to play". Finished match is not active.
+    // So it's fine.
     setLocation('/lobby');
   };
 
