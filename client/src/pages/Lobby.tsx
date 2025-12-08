@@ -11,11 +11,13 @@ import { ArrowLeft, Coins, Zap, Info, Loader2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from "wouter";
 import { mockEscrowAdapter } from "@/core/escrow/MockEscrowAdapter";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Lobby() {
   const { state, actions } = useGame();
   const [, setLocation] = useLocation();
   const [customStake, setCustomStake] = useState<string>("");
+  const { toast } = useToast();
 
   const handleAssetChange = (value: string) => {
     if (value) actions.selectAsset(value as Asset);
@@ -36,8 +38,46 @@ export default function Lobby() {
 
   const handleStartSearch = async () => {
     console.log("[Lobby] Start Search clicked");
-    // Set searching UI immediately
-    // Note: actions.startSearch will toggle isFinding in context, but we can log here
+    
+    // Validation
+    if (!state.wallet.connected) {
+      toast({
+        title: "Wallet not connected",
+        description: "Please connect your wallet to play.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (state.stakeAmount <= 0) {
+      toast({
+        title: "Invalid Wager",
+        description: "Please select a wager amount greater than 0.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const networkFee = mockEscrowAdapter.getEstimatedNetworkFee(state.selectedAsset);
+    const totalCost = state.stakeAmount + networkFee;
+    const currentBalance = state.wallet.balances[state.selectedAsset] || 0;
+
+    if (currentBalance < totalCost) {
+      toast({
+        title: "Insufficient Balance",
+        description: `You need ${totalCost.toFixed(4)} ${state.selectedAsset} but only have ${currentBalance.toFixed(4)}.`,
+        variant: "destructive"
+      });
+      // Allow proceeding if they insist? 
+      // User said "show error message when ... balance is insufficient"
+      // But also said "make button always clickable". 
+      // So we show error and BLOCK, or show error and PROCEED?
+      // "show an error message... and ensure onClick is correctly wired"
+      // Usually implies blocking action.
+      // But for prototype, let's block but give a clear message.
+      return; 
+    }
+
     await actions.startSearch();
   };
 
@@ -57,10 +97,6 @@ export default function Lobby() {
   const totalCost = state.stakeAmount + networkFee;
   
   const currentBalance = state.wallet.balances[state.selectedAsset] || 0;
-  // Relaxed condition: allow search even if balance low for prototype, but warn? 
-  // User asked to relax disabled conditions.
-  // We will just check stake > 0.
-  const canSearch = state.stakeAmount > 0; 
   const isBalanceSufficient = currentBalance >= totalCost;
   const isTon = state.selectedAsset === 'TON'; // TON is coming soon
 
@@ -180,12 +216,12 @@ export default function Lobby() {
         ) : (
           <Button 
             onClick={handleStartSearch}
-            disabled={!canSearch || isTon} // Relaxed: removed !isBalanceSufficient check for button enable
+            disabled={isTon} 
             className="w-full h-14 text-lg font-display font-bold uppercase tracking-widest bg-primary text-primary-foreground hover:bg-primary/90 border-glow disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {!isBalanceSufficient && canSearch ? (
+            {!isBalanceSufficient ? (
                <>
-                 <Zap className="mr-2 h-5 w-5" /> Find Match (Low Bal)
+                 <Zap className="mr-2 h-5 w-5" /> Find Match (Check Bal)
                </>
             ) : (
                <>
