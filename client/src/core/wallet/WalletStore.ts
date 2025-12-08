@@ -50,10 +50,18 @@ export class WalletStore {
     await new Promise(resolve => setTimeout(resolve, 500)); // Simulate delay
     
     if (!this.state.connected) {
+      // Try to recover address from storage or generate new
+      const stored = localStorage.getItem('wallet_state');
+      let address = '0x' + Math.random().toString(36).substring(2, 10).toUpperCase();
+      if (stored) {
+         const parsed = JSON.parse(stored);
+         if (parsed.address) address = parsed.address;
+      }
+
       this.state = {
         connected: true,
-        address: '0x' + Math.random().toString(36).substring(2, 10).toUpperCase(),
-        balances: { ...INITIAL_BALANCES } // Reset to defaults on connect for testing
+        address,
+        balances: { ...INITIAL_BALANCES } 
       };
       this.notify();
     }

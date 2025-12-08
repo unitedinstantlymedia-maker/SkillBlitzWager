@@ -35,17 +35,20 @@ export default function Lobby() {
   };
 
   const handleStartSearch = async () => {
+    console.log("[Lobby] Start Search clicked");
+    // Set searching UI immediately
+    // Note: actions.startSearch will toggle isFinding in context, but we can log here
     await actions.startSearch();
-    // If match found immediately, effect in GameContext will update currentMatch
-    // We should watch currentMatch to navigate
   };
 
   const handleCancelSearch = () => {
+    console.log("[Lobby] Cancel Search clicked");
     actions.cancelSearch();
   };
 
   // Navigate to play if match active
   if (state.currentMatch && state.currentMatch.status === 'active') {
+    console.log("[Lobby] Match active, redirecting to Play");
     setLocation(`/play/${state.selectedGame?.toLowerCase()}`);
     return null; 
   }
@@ -53,8 +56,11 @@ export default function Lobby() {
   const networkFee = mockEscrowAdapter.getEstimatedNetworkFee(state.selectedAsset);
   const totalCost = state.stakeAmount + networkFee;
   
-  // FIX: Ensure we check the correct balance for the selected asset
   const currentBalance = state.wallet.balances[state.selectedAsset] || 0;
+  // Relaxed condition: allow search even if balance low for prototype, but warn? 
+  // User asked to relax disabled conditions.
+  // We will just check stake > 0.
+  const canSearch = state.stakeAmount > 0; 
   const isBalanceSufficient = currentBalance >= totalCost;
   const isTon = state.selectedAsset === 'TON'; // TON is coming soon
 
@@ -174,15 +180,17 @@ export default function Lobby() {
         ) : (
           <Button 
             onClick={handleStartSearch}
-            disabled={!isBalanceSufficient || state.stakeAmount <= 0 || isTon}
+            disabled={!canSearch || isTon} // Relaxed: removed !isBalanceSufficient check for button enable
             className="w-full h-14 text-lg font-display font-bold uppercase tracking-widest bg-primary text-primary-foreground hover:bg-primary/90 border-glow disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isBalanceSufficient ? (
-              <>
-                <Zap className="mr-2 h-5 w-5" /> Find Match
-              </>
+            {!isBalanceSufficient && canSearch ? (
+               <>
+                 <Zap className="mr-2 h-5 w-5" /> Find Match (Low Bal)
+               </>
             ) : (
-              "Insufficient Balance"
+               <>
+                 <Zap className="mr-2 h-5 w-5" /> Find Match
+               </>
             )}
           </Button>
         )}

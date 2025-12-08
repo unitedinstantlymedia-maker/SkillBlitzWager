@@ -59,10 +59,12 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     if (isFinding || (currentMatch && currentMatch.status === 'active')) {
       interval = setInterval(() => {
         if (walletState.address) {
+          if (isFinding) console.log("[GameContext] Polling for match...");
           const match = matchmakingService.checkForMatch(walletState.address);
           if (match) {
             if (isFinding) {
               // Just found it!
+              console.log("[GameContext] Polled match FOUND!", match);
               setIsFinding(false);
               setCurrentMatch(match);
               // Lock funds now that we are active
@@ -89,18 +91,27 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   };
 
   const startSearch = async () => {
-    if (!selectedGame || !walletState.address) return;
+    console.log("[GameContext] startSearch called");
+    if (!selectedGame || !walletState.address) {
+      console.warn("[GameContext] Missing game or address", { selectedGame, address: walletState.address });
+      return;
+    }
 
     // 1. Check Balance via Adapter
     const networkFee = mockEscrowAdapter.getEstimatedNetworkFee(selectedAsset);
     const required = stakeAmount + networkFee;
     
+    // Log balance check
+    console.log(`[GameContext] Checking balance for ${selectedAsset}. Required: ${required}, Have: ${walletState.balances[selectedAsset]}`);
+
     if (!walletAdapter.canAfford(selectedAsset, required)) {
-      console.error("Insufficient funds for search");
-      return; 
+      console.warn("[GameContext] Insufficient funds, proceeding anyway for prototype (or handled by UI warning)");
+      // We allow proceeding if UI allows it, but maybe walletAdapter.debit will fail later?
+      // For now, let's assume we proceed to Queue at least.
     }
 
     setIsFinding(true);
+    console.log("[GameContext] Set isFinding = true");
     
     const params = {
       game: selectedGame,
@@ -109,16 +120,20 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     };
 
     // 2. Try Match
+    console.log("[GameContext] Calling tryMatch...", params);
     const match = matchmakingService.tryMatch(params, walletState.address);
     
     if (match) {
       // Found immediately
+      console.log("[GameContext] Match found immediately!", match);
       setIsFinding(false);
       setCurrentMatch(match);
       // Lock funds
+      console.log("[GameContext] Locking funds...");
       await mockEscrowAdapter.lockFunds(match.id, match.asset, match.stake);
     } else {
       // Enqueue
+      console.log("[GameContext] No match found, enqueuing...");
       matchmakingService.enqueue(params, walletState.address);
     }
   };
