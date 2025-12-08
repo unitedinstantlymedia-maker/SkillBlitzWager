@@ -39,12 +39,24 @@ const GameContext = createContext<GameContextValue | undefined>(undefined);
 
 export function GameProvider({ children }: { children: React.ReactNode }) {
   const [walletState, setWalletState] = useState<WalletState>(walletStore.getState());
-  const [selectedGame, setSelectedGame] = useState<Game | null>(null);
+  // Initialize from localStorage if available
+  const [selectedGame, setSelectedGame] = useState<Game | null>(() => {
+    const stored = localStorage.getItem('skillblitz_selected_game');
+    return stored ? (stored as Game) : null;
+  });
+  
   const [selectedAsset, setSelectedAsset] = useState<Asset>('USDT');
   const [stakeAmount, setStakeAmount] = useState<number>(20);
   const [currentMatch, setCurrentMatch] = useState<Match | null>(null);
   const [history, setHistory] = useState(historyStore.getHistory());
   const [isFinding, setIsFinding] = useState(false);
+
+  // Persist selectedGame
+  useEffect(() => {
+    if (selectedGame) {
+      localStorage.setItem('skillblitz_selected_game', selectedGame);
+    }
+  }, [selectedGame]);
 
   // Subscribe to wallet changes
   useEffect(() => {

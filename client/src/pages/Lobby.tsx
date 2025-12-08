@@ -12,12 +12,19 @@ import { cn } from "@/lib/utils";
 import { Link } from "wouter";
 import { mockEscrowAdapter } from "@/core/escrow/MockEscrowAdapter";
 import { useToast } from "@/hooks/use-toast";
+import { useEffect } from "react";
 
 export default function Lobby() {
   const { state, actions } = useGame();
   const [, setLocation] = useLocation();
   const [customStake, setCustomStake] = useState<string>("");
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (!state.selectedGame) {
+      setLocation('/games');
+    }
+  }, [state.selectedGame, setLocation]);
 
   const handleAssetChange = (value: string) => {
     if (value) actions.selectAsset(value as Asset);

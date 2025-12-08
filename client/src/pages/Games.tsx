@@ -27,11 +27,11 @@ const GAMES: { id: GameType; name: string; image: string; players: string }[] = 
 ];
 
 export default function Games() {
-  const { dispatch } = useGame();
+  const { actions } = useGame();
   const [, setLocation] = useLocation();
 
   const handleSelectGame = (gameId: GameType) => {
-    dispatch({ type: 'SELECT_GAME', payload: gameId });
+    actions.selectGame(gameId as any); // Cast for safety if types slightly mismatch
     setLocation('/lobby');
   };
 
