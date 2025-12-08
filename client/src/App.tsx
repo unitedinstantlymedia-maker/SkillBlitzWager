@@ -9,7 +9,6 @@ import Landing from "@/pages/Landing";
 import Rules from "@/pages/Rules";
 import Games from "@/pages/Games";
 import Lobby from "@/pages/Lobby";
-import Matchmaking from "@/pages/Matchmaking";
 import Play from "@/pages/Play";
 import Result from "@/pages/Result";
 import Wallet from "@/pages/Wallet";
@@ -24,7 +23,6 @@ function Router() {
         <Route path="/rules" component={Rules} />
         <Route path="/games" component={Games} />
         <Route path="/lobby" component={Lobby} />
-        <Route path="/match" component={Matchmaking} />
         <Route path="/play/:gameId" component={Play} />
         <Route path="/result" component={Result} />
         <Route path="/wallet" component={Wallet} />

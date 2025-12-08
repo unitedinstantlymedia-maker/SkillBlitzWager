@@ -1,56 +1,50 @@
-import { AssetType } from "@/lib/types";
-
-export interface WalletState {
-  connected: boolean;
-  address: string | null;
-  balances: Record<AssetType, number>;
-}
+import { Asset } from "@/core/types";
+import { walletStore } from "./WalletStore";
 
 export interface IWalletAdapter {
-  connect(): Promise<WalletState>;
-  disconnect(): Promise<void>;
-  getBalances(address: string): Promise<Record<AssetType, number>>;
+  connect(): Promise<{ address: string }>;
+  isConnected(): boolean;
+  getAddress(): string | null;
+  getBalances(): Record<Asset, number>;
+  canAfford(asset: Asset, amount: number): boolean;
+  debit(asset: Asset, amount: number): void;
+  credit(asset: Asset, amount: number): void;
 }
 
 export class MockWalletAdapter implements IWalletAdapter {
-  private mockState: WalletState = {
-    connected: false,
-    address: null,
-    balances: {
-      USDT: 0,
-      ETH: 0,
-      TON: 0
+  async connect(): Promise<{ address: string }> {
+    await walletStore.connect();
+    const state = walletStore.getState();
+    if (!state.address) throw new Error("Failed to connect");
+    return { address: state.address };
+  }
+
+  isConnected(): boolean {
+    return walletStore.getState().connected;
+  }
+
+  getAddress(): string | null {
+    return walletStore.getState().address;
+  }
+
+  getBalances(): Record<Asset, number> {
+    return walletStore.getState().balances;
+  }
+
+  canAfford(asset: Asset, amount: number): boolean {
+    const balances = this.getBalances();
+    return (balances[asset] || 0) >= amount;
+  }
+
+  debit(asset: Asset, amount: number): void {
+    const success = walletStore.deduct(asset, amount);
+    if (!success) {
+      throw new Error(`Insufficient ${asset} balance`);
     }
-  };
-
-  async connect(): Promise<WalletState> {
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    this.mockState = {
-      connected: true,
-      address: '0x71C...9A21',
-      balances: {
-        USDT: 100,
-        ETH: 0.2,
-        TON: 50
-      }
-    };
-    return this.mockState;
   }
 
-  async disconnect(): Promise<void> {
-    this.mockState = {
-      connected: false,
-      address: null,
-      balances: { USDT: 0, ETH: 0, TON: 0 }
-    };
-  }
-
-  async getBalances(address: string): Promise<Record<AssetType, number>> {
-    // In a real app, this would fetch from chain
-    // For mock, we return the internal mock state
-    return this.mockState.balances;
+  credit(asset: Asset, amount: number): void {
+    walletStore.credit(asset, amount);
   }
 }
 
