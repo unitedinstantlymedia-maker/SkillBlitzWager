@@ -1,5 +1,5 @@
 import { Asset, MatchResult } from "@/core/types";
-import { walletStore } from "@/core/wallet/WalletStore";
+import { walletAdapter } from "@/core/wallet/WalletAdapter";
 import { FEE_RATE, NETWORK_FEE_USD_PER_PLAYER, ASSET_PRICES_USD } from "@/config/economy";
 
 export class MockEscrowAdapter {
@@ -15,16 +15,15 @@ export class MockEscrowAdapter {
     const networkFee = this.getEstimatedNetworkFee(asset);
     const totalRequired = stake + networkFee;
     
-    // Attempt deduction via WalletStore
-    const success = walletStore.deduct(asset, totalRequired);
-    
-    if (success) {
+    try {
+      // Attempt deduction via WalletAdapter
+      walletAdapter.debit(asset, totalRequired);
       console.log(`[Escrow] Locked funds for match ${matchId}: ${stake} stake + ${networkFee} fee (${asset})`);
-    } else {
+      return true;
+    } catch (e) {
       console.error(`[Escrow] Failed to lock funds for match ${matchId}. Insufficient balance.`);
+      return false;
     }
-    
-    return success;
   }
 
   async settleMatch(matchId: string, asset: Asset, stake: number, result: MatchResult): Promise<{ payout: number, fee: number }> {
@@ -37,14 +36,11 @@ export class MockEscrowAdapter {
     if (result === 'win') {
       payout = pot - fee;
       // Credit payout to wallet
-      walletStore.credit(asset, payout);
+      walletAdapter.credit(asset, payout);
     } else if (result === 'draw') {
-        // Refund stake? Or pot/2 - fee? Usually draw = refund stake minus fee?
-        // Prompt says "winner receives pot - fee". Doesn't specify draw.
-        // Let's assume draw = refund stake (minus network fee which is already gone).
-        // But platform fee? Usually platform takes fee on draw too or refunds all.
-        // Let's assume simple win/loss for now as per prompt "winner/loser result".
         payout = stake; // Fallback
+        // Refund stake (minus fees)
+        walletAdapter.credit(asset, payout);
     }
     
     console.log(`[Escrow] Settled match ${matchId}: Result ${result}, Payout ${payout}, Fee ${fee}`);

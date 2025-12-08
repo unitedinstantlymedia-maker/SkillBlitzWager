@@ -7,7 +7,8 @@ import {
   getQueueKey,
   HistoryEntry
 } from '@/core/types';
-import { walletStore } from '@/core/wallet/WalletStore';
+import { walletAdapter } from '@/core/wallet/WalletAdapter';
+import { walletStore } from '@/core/wallet/WalletStore'; // Need store for subscription
 import { matchmakingService } from '@/core/matchmaking/MatchmakingService';
 import { mockEscrowAdapter } from '@/core/escrow/MockEscrowAdapter';
 import { historyStore } from '@/core/history/HistoryStore';
@@ -84,18 +85,19 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   }, [isFinding, currentMatch, walletState.address]);
 
   const connectWallet = async () => {
-    await walletStore.connect();
+    await walletAdapter.connect();
   };
 
   const startSearch = async () => {
     if (!selectedGame || !walletState.address) return;
 
-    // 1. Check Balance (Pre-check only, no deduction)
+    // 1. Check Balance via Adapter
     const networkFee = mockEscrowAdapter.getEstimatedNetworkFee(selectedAsset);
     const required = stakeAmount + networkFee;
-    if (walletState.balances[selectedAsset] < required) {
+    
+    if (!walletAdapter.canAfford(selectedAsset, required)) {
       console.error("Insufficient funds for search");
-      return; // UI should handle this via disabled button, but good to have check
+      return; 
     }
 
     setIsFinding(true);
@@ -106,26 +108,24 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       stake: stakeAmount
     };
 
-    // 2. Find Match (or Join Queue)
-    // This returns immediately with a match if found, or null if queued
-    const match = await matchmakingService.findMatch(params, walletState.address);
+    // 2. Try Match
+    const match = matchmakingService.tryMatch(params, walletState.address);
     
     if (match) {
-      // Found immediately (second player)
+      // Found immediately
       setIsFinding(false);
       setCurrentMatch(match);
       // Lock funds
       await mockEscrowAdapter.lockFunds(match.id, match.asset, match.stake);
     } else {
-      // Queued (first player)
-      // Wait for polling in useEffect
-      console.log(`[Matchmaking] Queued: ${getQueueKey(params.game, params.asset, params.stake)}`);
+      // Enqueue
+      matchmakingService.enqueue(params, walletState.address);
     }
   };
 
   const cancelSearch = () => {
     if (!selectedGame || !walletState.address) return;
-    matchmakingService.cancelSearch({
+    matchmakingService.cancel({
       game: selectedGame,
       asset: selectedAsset,
       stake: stakeAmount
@@ -188,7 +188,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       cancelSearch,
       finishMatch
     },
-    dispatch: () => {} // No-op, using actions
+    dispatch: () => {} 
   };
 
   return (

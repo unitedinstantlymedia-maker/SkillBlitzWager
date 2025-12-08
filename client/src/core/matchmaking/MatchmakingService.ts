@@ -1,10 +1,10 @@
 import { MatchParams, Match, getQueueKey } from "@/core/types";
 
-// Simulated shared state via localStorage to allow cross-tab matchmaking
 const STORAGE_KEY_QUEUE = 'skillblitz_queue';
 const STORAGE_KEY_MATCHES = 'skillblitz_matches';
 
-type Queue = Record<string, MatchParams & { playerId: string, timestamp: number }>;
+type QueueEntry = MatchParams & { playerId: string, timestamp: number };
+type Queue = Record<string, QueueEntry>;
 
 export class MatchmakingService {
   private static instance: MatchmakingService;
@@ -27,20 +27,36 @@ export class MatchmakingService {
     localStorage.setItem(STORAGE_KEY_QUEUE, JSON.stringify(queue));
   }
 
-  // Find opponent or join queue
-  // Returns valid match ID if paired immediately, or null if queued
-  async findMatch(params: MatchParams, playerId: string): Promise<Match | null> {
-    const key = getQueueKey(params.game, params.asset, params.stake);
-    const queue = this.getQueue();
+  private getMatches(): Record<string, Match> {
+    const stored = localStorage.getItem(STORAGE_KEY_MATCHES);
+    return stored ? JSON.parse(stored) : {};
+  }
 
-    // Check if someone else is waiting in this queue
-    // For simplicity in prototype: specific key matching only
-    // In real app: we'd lock the queue item, etc.
+  private setMatches(matches: Record<string, Match>) {
+    localStorage.setItem(STORAGE_KEY_MATCHES, JSON.stringify(matches));
+  }
+
+  // Add player to queue
+  enqueue(params: MatchParams, playerId: string): void {
+    const queue = this.getQueue();
+    const key = getQueueKey(params.game, params.asset, params.stake);
+    const uniqueKey = `${key}:${playerId}`; // Use playerId to prevent duplicate entries from same player? Or allow re-queue?
     
-    // Filter out stale entries > 1 min? (Optional cleanup)
-    
-    // Look for an entry with DIFFERENT playerId
-    const waitingEntries = Object.entries(queue).filter(([k, v]) => k.startsWith(key) && v.playerId !== playerId);
+    // Check if already in queue to avoid duplicates
+    if (queue[uniqueKey]) return;
+
+    queue[uniqueKey] = { ...params, playerId, timestamp: Date.now() };
+    this.setQueue(queue);
+    console.log(`[Matchmaking] Enqueued: ${uniqueKey}`);
+  }
+
+  // Try to find a match for the player
+  tryMatch(params: MatchParams, playerId: string): Match | null {
+    const queue = this.getQueue();
+    const key = getQueueKey(params.game, params.asset, params.stake);
+
+    // Look for an entry with DIFFERENT playerId in the same bucket
+    const waitingEntries = Object.entries(queue).filter(([k, v]) => k.startsWith(key + ":") && v.playerId !== playerId);
 
     if (waitingEntries.length > 0) {
       // Match found!
@@ -48,6 +64,10 @@ export class MatchmakingService {
       
       // Remove opponent from queue
       delete queue[waitingKey];
+      // Remove self from queue if present
+      const selfKey = `${key}:${playerId}`;
+      if (queue[selfKey]) delete queue[selfKey];
+
       this.setQueue(queue);
 
       // Create Active Match
@@ -67,56 +87,35 @@ export class MatchmakingService {
       matches[matchId] = match;
       this.setMatches(matches);
 
+      console.log(`[Matchmaking] Match Created: ${matchId}`);
       return match;
-    } else {
-      // No match found, add self to queue
-      // Use a unique key for the queue entry so we don't overwrite? 
-      // Or just one slot per game/asset/stake?
-      // Ideally queue is a list.
-      // Let's make the key unique: key + timestamp
-      const uniqueKey = `${key}:${Date.now()}`;
-      queue[uniqueKey] = { ...params, playerId, timestamp: Date.now() };
+    }
+
+    return null;
+  }
+
+  cancel(params: MatchParams, playerId: string): void {
+    const queue = this.getQueue();
+    const key = getQueueKey(params.game, params.asset, params.stake);
+    const uniqueKey = `${key}:${playerId}`;
+    
+    if (queue[uniqueKey]) {
+      delete queue[uniqueKey];
       this.setQueue(queue);
-      return null; 
+      console.log(`[Matchmaking] Cancelled: ${uniqueKey}`);
     }
   }
 
-  cancelSearch(params: MatchParams, playerId: string) {
-    const queue = this.getQueue();
-    const keyPrefix = getQueueKey(params.game, params.asset, params.stake);
-    
-    // Remove all entries for this player in this bucket
-    Object.keys(queue).forEach(k => {
-      if (k.startsWith(keyPrefix) && queue[k].playerId === playerId) {
-        delete queue[k];
-      }
-    });
-    this.setQueue(queue);
-  }
-
-  // Poll for match status (used by the waiting player)
+  // Helper for polling to see if we got matched by someone else
   checkForMatch(playerId: string): Match | null {
     const matches = this.getMatches();
+    // Look for active matches where I am a player
+    // TODO: Filter out old matches?
     const found = Object.values(matches).find(m => 
       (m.status === 'active' || m.status === 'finished') && 
       m.players.includes(playerId)
     );
     return found || null;
-  }
-
-  private getMatches(): Record<string, Match> {
-    const stored = localStorage.getItem(STORAGE_KEY_MATCHES);
-    return stored ? JSON.parse(stored) : {};
-  }
-
-  private setMatches(matches: Record<string, Match>) {
-    localStorage.setItem(STORAGE_KEY_MATCHES, JSON.stringify(matches));
-  }
-  
-  // Helper to clean up for testing
-  reset() {
-    localStorage.removeItem(STORAGE_KEY_QUEUE);
-    localStorage.removeItem(STORAGE_KEY_MATCHES);
   }
 }
 
