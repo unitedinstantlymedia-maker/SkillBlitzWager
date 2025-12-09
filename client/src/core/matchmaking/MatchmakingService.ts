@@ -64,7 +64,9 @@ export class MatchmakingService {
   private triggerMockMatch(params: MatchParams, playerId: string) {
     // Check if player is still in queue (might have cancelled or matched real player)
     const queue = this.getQueue();
-    const key = getQueueKey(params.game, params.asset, params.stake);
+    // Use Number() to ensure stake is numeric
+    const safeParams = { ...params, stake: Number(params.stake) };
+    const key = getQueueKey(safeParams.game, safeParams.asset, safeParams.stake);
     const uniqueKey = `${key}:${playerId}`;
     
     if (!queue[uniqueKey]) {
@@ -84,9 +86,9 @@ export class MatchmakingService {
     
     const match: Match = {
       id: matchId,
-      game: params.game,
-      asset: params.asset,
-      stake: params.stake,
+      game: safeParams.game,
+      asset: safeParams.asset,
+      stake: safeParams.stake,
       status: 'active',
       players: [playerId, mockOpponentId],
       startTime: Date.now()
@@ -97,7 +99,7 @@ export class MatchmakingService {
     matches[matchId] = match;
     this.setMatches(matches);
 
-    console.log(`[Matchmaking] Mock Match Created: ${matchId} vs ${mockOpponentId}`);
+    console.log(`[Matchmaking] Mock Match Created: ${matchId} vs ${mockOpponentId} with stake ${match.stake}`);
   }
 
   // Try to find a match for the player
