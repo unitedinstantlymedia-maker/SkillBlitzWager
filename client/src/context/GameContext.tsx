@@ -131,6 +131,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       stake: stakeAmount
     };
 
+    // Clear any existing stale match in context before starting search
+    setCurrentMatch(null);
+
     // 2. Try Match
     console.log(`[GameContext] Calling tryMatch with params:`, JSON.stringify(params));
     const match = matchmakingService.tryMatch(params, walletState.address);

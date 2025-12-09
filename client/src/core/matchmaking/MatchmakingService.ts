@@ -167,11 +167,12 @@ export class MatchmakingService {
   checkForMatch(playerId: string): Match | null {
     const matches = this.getMatches();
     // Look for active matches where I am a player
-    // TODO: Filter out old matches?
-    const found = Object.values(matches).find(m => 
-      (m.status === 'active' || m.status === 'finished') && 
-      m.players.includes(playerId)
-    );
+    // Prioritize newest matches by sorting by startTime
+    const found = Object.values(matches)
+      .filter(m => (m.status === 'active' || m.status === 'finished') && m.players.includes(playerId))
+      .sort((a, b) => (b.startTime || 0) - (a.startTime || 0))
+      .find(Boolean); // Get first (newest)
+      
     return found || null;
   }
 }
