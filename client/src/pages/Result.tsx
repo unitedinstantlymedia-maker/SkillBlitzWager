@@ -64,6 +64,11 @@ export default function Result() {
           <p className={`text-3xl font-mono font-bold ${isWin ? 'text-white' : 'text-muted-foreground'}`}>
             {payout.toFixed(4)} {state.selectedAsset}
           </p>
+          {isWin && (
+            <p className="text-sm text-green-400 font-mono">
+              Profit: +{(payout - (state.currentMatch?.stake || 0)).toFixed(4)} {state.selectedAsset}
+            </p>
+          )}
         </div>
         
         {isWin && (
@@ -72,6 +77,11 @@ export default function Result() {
             <span>{state.currentMatch?.fee?.toFixed(4)} {state.selectedAsset}</span>
           </div>
         )}
+        
+        <div className="pt-2 border-t border-white/5 text-xs text-muted-foreground flex justify-between">
+             <span>Initial Stake</span>
+             <span>{state.currentMatch?.stake.toFixed(4)} {state.selectedAsset}</span>
+        </div>
       </Card>
 
       <div className="w-full space-y-4">

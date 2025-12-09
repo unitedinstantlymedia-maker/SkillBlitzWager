@@ -210,7 +210,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       connectWallet,
       selectGame: setSelectedGame,
       selectAsset: setSelectedAsset,
-      setStake: setStakeAmount,
+      setStake: (amount: number) => {
+        console.log(`[GameContext] Setting stake to: ${amount}`);
+        setStakeAmount(amount);
+      },
       startSearch,
       cancelSearch,
       finishMatch

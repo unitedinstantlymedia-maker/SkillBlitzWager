@@ -31,6 +31,7 @@ export default function Lobby() {
   };
 
   const handleStakeChange = (amount: number) => {
+    console.log(`[Lobby] Stake preset clicked: ${amount}`);
     actions.setStake(amount);
     setCustomStake("");
   };
@@ -39,6 +40,7 @@ export default function Lobby() {
     const val = e.target.value;
     setCustomStake(val);
     if (val && !isNaN(Number(val))) {
+      console.log(`[Lobby] Custom stake changed: ${Number(val)}`);
       actions.setStake(Number(val));
     }
   };
