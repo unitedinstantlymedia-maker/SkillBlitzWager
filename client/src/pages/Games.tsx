@@ -23,6 +23,12 @@ const GAMES: { id: GameType; name: string; image: string; players: string }[] = 
     name: 'Checkers Pro', 
     image: 'https://images.unsplash.com/photo-1611195974226-a6a9be9dd763?q=80&w=2525&auto=format&fit=crop',
     players: '430 playing'
+  },
+  { 
+    id: 'Battleship', 
+    name: 'Battleship', 
+    image: 'https://images.unsplash.com/photo-1516934024742-b461fba47600?q=80&w=2574&auto=format&fit=crop',
+    players: 'Coming Soon'
   }
 ];
 

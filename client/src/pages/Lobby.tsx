@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useLocation } from "wouter";
 import { useState } from "react";
-import { ArrowLeft, Coins, Zap, Info, Loader2, X } from "lucide-react";
+import { ArrowLeft, Coins, Zap, Info, Loader2, X, Ship } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from "wouter";
 import { mockEscrowAdapter } from "@/core/escrow/MockEscrowAdapter";
@@ -25,6 +25,30 @@ export default function Lobby() {
       setLocation('/games');
     }
   }, [state.selectedGame, setLocation]);
+
+  // Handle Battleship Coming Soon State
+  if (state.selectedGame === 'Battleship') {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6 text-center animate-in fade-in zoom-in duration-500">
+        <div className="relative">
+           <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full" />
+           <Ship className="w-24 h-24 text-blue-400 relative z-10 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]" />
+        </div>
+        <div className="space-y-2">
+          <h1 className="text-4xl font-display font-bold uppercase tracking-wider text-blue-400 text-glow">Battleship</h1>
+          <p className="text-xl text-muted-foreground font-medium uppercase tracking-widest">Coming Soon</p>
+        </div>
+        <p className="text-sm text-muted-foreground/60 max-w-xs mx-auto font-mono leading-relaxed">
+          Prepare your fleet. Strategic naval warfare is arriving shortly on SkillBlitz.
+        </p>
+        <Link href="/games">
+          <Button variant="outline" className="mt-8 border-blue-500/20 hover:bg-blue-500/10 hover:text-blue-400 h-12 px-8 uppercase tracking-widest font-bold">
+            <ArrowLeft className="mr-2 h-4 w-4" /> Back to Games
+          </Button>
+        </Link>
+      </div>
+    );
+  }
 
   const handleAssetChange = (value: string) => {
     if (value) actions.selectAsset(value as Asset);

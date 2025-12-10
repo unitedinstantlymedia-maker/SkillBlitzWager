@@ -1,7 +1,7 @@
 // Core types for the application
 
 export type Asset = 'USDT' | 'ETH' | 'TON';
-export type Game = 'Chess' | 'Tetris' | 'Checkers';
+export type Game = 'Chess' | 'Tetris' | 'Checkers' | 'Battleship';
 export type MatchStatus = 'finding' | 'active' | 'finished' | 'cancelled';
 export type MatchResult = 'win' | 'loss' | 'draw';
 
