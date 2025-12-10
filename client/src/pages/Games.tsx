@@ -4,6 +4,7 @@ import { Link, useLocation } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import battleshipImage from '@assets/stock_images/battleship_navy_ship_31f24312.jpg';
 
 const GAMES: { id: GameType; name: string; image: string; players: string }[] = [
   { 
@@ -27,8 +28,8 @@ const GAMES: { id: GameType; name: string; image: string; players: string }[] = 
   { 
     id: 'Battleship', 
     name: 'Battleship', 
-    image: 'https://images.unsplash.com/photo-1516934024742-b461fba47600?q=80&w=2574&auto=format&fit=crop',
-    players: 'Coming Soon'
+    image: battleshipImage,
+    players: '342 playing'
   }
 ];
 
