@@ -181,18 +181,26 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       result
     );
 
-    // Record History
-    const entry = {
+    // Record History with EXPLICIT number conversion to prevent any string/stale data issues
+    const safeStake = Number(currentMatch.stake);
+    const safePayout = Number(payout);
+    const safeFee = Number(fee);
+    const safePot = safeStake * 2;
+
+    const entry: HistoryEntry = {
       id: currentMatch.id,
       game: currentMatch.game,
       asset: currentMatch.asset,
-      stake: currentMatch.stake,
+      stake: safeStake,
       result,
-      pot: currentMatch.stake * 2,
-      fee,
-      payout,
+      pot: safePot,
+      fee: safeFee,
+      payout: safePayout,
       timestamp: Date.now()
     };
+    
+    console.log("[GameContext] Adding History Entry:", JSON.stringify(entry));
+    
     historyStore.addEntry(entry);
     setHistory(historyStore.getHistory());
     
@@ -201,8 +209,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       ...currentMatch,
       status: 'finished',
       result,
-      payout,
-      fee
+      payout: safePayout,
+      fee: safeFee
     });
   };
 

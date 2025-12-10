@@ -31,7 +31,7 @@ export default function Play() {
           <span className="font-mono text-xs uppercase text-muted-foreground">Live Match</span>
         </div>
         <div className="font-mono font-bold text-primary">
-          Pot: {state.stakeAmount * 2} {state.selectedAsset}
+          Pot: {(state.currentMatch?.stake || 0) * 2} {state.selectedAsset}
         </div>
       </div>
 
