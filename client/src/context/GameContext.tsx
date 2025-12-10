@@ -75,6 +75,13 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
           const match = matchmakingService.checkForMatch(walletState.address);
           if (match) {
             if (isFinding) {
+              // STRICT CHECK: Only accept match if stake equals current desired stake
+              // This prevents picking up stale matches from previous searches
+              if (match.stake !== stakeAmount) {
+                console.warn(`[GameContext] Ignored zombie match ${match.id} with wrong stake: ${match.stake}, expected: ${stakeAmount}`);
+                return;
+              }
+
               // Just found it!
               console.log("[GameContext] Polled match FOUND!", match);
               setIsFinding(false);

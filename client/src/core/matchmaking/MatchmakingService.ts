@@ -168,8 +168,13 @@ export class MatchmakingService {
     const matches = this.getMatches();
     // Look for active matches where I am a player
     // Prioritize newest matches by sorting by startTime
+    // Filter out matches older than 2 minutes to prevent zombie matches
+    const NOW = Date.now();
+    const STALE_THRESHOLD = 2 * 60 * 1000; // 2 minutes
+
     const found = Object.values(matches)
       .filter(m => (m.status === 'active' || m.status === 'finished') && m.players.includes(playerId))
+      .filter(m => (NOW - (m.startTime || 0)) < STALE_THRESHOLD) // Only recent matches
       .sort((a, b) => (b.startTime || 0) - (a.startTime || 0))
       .find(Boolean); // Get first (newest)
       
