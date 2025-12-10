@@ -1,7 +1,7 @@
 import { Link, useLocation } from "wouter";
-import { Gamepad2, Wallet, History, Home } from "lucide-react";
+import { Gamepad2, Wallet, History } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 export function BottomNav() {
   const [location] = useLocation();
@@ -16,86 +16,98 @@ export function BottomNav() {
       path: '/games', 
       label: 'Play', 
       icon: Gamepad2,
-      activeColor: 'text-green-400'
+      color: 'from-green-500/20 to-emerald-500/20',
+      borderColor: 'border-green-500/50',
+      glowColor: 'shadow-green-500/50',
+      iconColor: 'text-green-400'
     },
     { 
       path: '/wallet', 
       label: 'Wallet', 
       icon: Wallet,
-      activeColor: 'text-blue-400'
+      color: 'from-blue-500/20 to-cyan-500/20',
+      borderColor: 'border-blue-500/50',
+      glowColor: 'shadow-blue-500/50',
+      iconColor: 'text-blue-400'
     },
     { 
       path: '/history', 
       label: 'History', 
       icon: History,
-      activeColor: 'text-purple-400'
+      color: 'from-purple-500/20 to-pink-500/20',
+      borderColor: 'border-purple-500/50',
+      glowColor: 'shadow-purple-500/50',
+      iconColor: 'text-purple-400'
     }
   ];
 
   return (
-    <div className="fixed bottom-6 left-0 right-0 z-50 px-4 flex justify-center pointer-events-none">
-      <nav className="pointer-events-auto flex items-center gap-1 p-2 rounded-2xl bg-black/60 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] ring-1 ring-white/5 relative overflow-hidden">
-        {/* Glossy overlay effect */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
-        
+    <div className="fixed bottom-6 left-0 right-0 z-50 px-6 flex justify-center pointer-events-none">
+      <nav className="pointer-events-auto flex items-center gap-4 p-2 rounded-3xl bg-black/40 backdrop-blur-xl border border-white/5 shadow-2xl relative">
         {navItems.map((item) => {
           const active = isActive(item.path);
           
           return (
             <Link key={item.path} href={item.path}>
-              <a className="relative group px-6 py-3 flex flex-col items-center justify-center cursor-pointer min-w-[80px]">
+              <a className="relative group">
+                <motion.div
+                  className={cn(
+                    "relative w-24 h-16 rounded-2xl flex flex-col items-center justify-center gap-1 transition-all duration-300",
+                    "border backdrop-blur-md shadow-lg cursor-pointer overflow-hidden",
+                    active 
+                      ? cn("bg-gradient-to-br border-2", item.color, item.borderColor, item.glowColor, "shadow-[0_0_20px_rgba(0,0,0,0.5)]") 
+                      : "bg-white/5 border-white/10 hover:bg-white/10"
+                  )}
+                  animate={{ 
+                    y: active ? -8 : 0,
+                    scale: active ? 1.05 : 1,
+                  }}
+                  whileHover={{ 
+                    y: active ? -10 : -4,
+                    scale: 1.05 
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                >
+                  {/* Glossy sheen */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent opacity-50 pointer-events-none" />
+
+                  {/* Icon */}
+                  <item.icon className={cn(
+                    "h-6 w-6 z-10 drop-shadow-md transition-colors duration-300",
+                    active ? "text-white" : "text-muted-foreground group-hover:text-white"
+                  )} />
+                  
+                  {/* Label */}
+                  <span className={cn(
+                    "text-[10px] font-bold uppercase tracking-widest z-10 transition-colors duration-300",
+                    active ? "text-white" : "text-muted-foreground group-hover:text-white"
+                  )}>
+                    {item.label}
+                  </span>
+
+                  {/* Active Glow Background Effect */}
+                  {active && (
+                    <motion.div
+                      layoutId="active-glow"
+                      className={cn("absolute inset-0 opacity-30 bg-gradient-to-t", item.color)}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 0.3 }}
+                    />
+                  )}
+                </motion.div>
+                
+                {/* Reflection/Shadow underneath when lifted */}
                 {active && (
-                  <motion.div
-                    layoutId="nav-pill"
-                    className="absolute inset-0 bg-white/10 rounded-xl"
-                    initial={false}
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className={cn(
+                      "absolute -bottom-4 left-1/2 -translate-x-1/2 w-16 h-2 rounded-full blur-md opacity-50",
+                      item.iconColor.replace('text-', 'bg-')
+                    )}
                   />
                 )}
-                
-                <div className="relative z-10 flex flex-col items-center gap-1">
-                  <motion.div
-                    animate={{ 
-                      scale: active ? 1.1 : 1,
-                      y: active ? -2 : 0 
-                    }}
-                    whileHover={{ scale: 1.2 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                    className={cn(
-                      "relative",
-                      active ? item.activeColor : "text-muted-foreground group-hover:text-white"
-                    )}
-                  >
-                    <item.icon className={cn(
-                      "h-7 w-7 transition-all duration-300",
-                      active && "drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]"
-                    )} />
-                    
-                    {/* Active dot */}
-                    {active && (
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className={cn(
-                          "absolute -bottom-2 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-current shadow-[0_0_5px_currentColor]"
-                        )}
-                      />
-                    )}
-                  </motion.div>
-                  
-                  {active && (
-                    <motion.span
-                      initial={{ opacity: 0, y: 5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className={cn(
-                        "text-[10px] font-bold uppercase tracking-wider mt-1",
-                        item.activeColor
-                      )}
-                    >
-                      {item.label}
-                    </motion.span>
-                  )}
-                </div>
               </a>
             </Link>
           );
