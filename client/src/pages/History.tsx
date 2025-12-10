@@ -36,13 +36,13 @@ export default function History() {
                 
                 <div className="text-right">
                   <p className={`font-mono font-bold ${item.result === 'win' ? 'text-primary' : 'text-destructive'}`}>
-                    {item.result === 'win' ? '+' : '-'}{item.result === 'win' ? (Number(item.payout) - Number(item.stake)).toFixed(4) : Number(item.stake).toFixed(4)} {item.asset}
+                    {item.result === 'win' ? '+' : '-'}{item.result === 'win' ? Number(item.payout).toFixed(4) : Number(item.stake).toFixed(4)} {item.asset}
                   </p>
                   <p className="text-xs text-muted-foreground font-mono">
-                    {item.result === 'win' ? 'Profit' : 'Loss'}
+                    {item.result === 'win' ? 'Payout' : 'Lost'}
                   </p>
                   <div className="text-[10px] text-muted-foreground font-mono mt-1">
-                     Stake: {Number(item.stake).toFixed(4)} | Payout: {Number(item.payout).toFixed(4)} | Fee: {Number(item.fee).toFixed(4)}
+                     Stake: {Number(item.stake).toFixed(2)} | Fee: {Number(item.fee).toFixed(2)} | Profit: {item.result === 'win' ? '+' + (Number(item.payout) - Number(item.stake)).toFixed(2) : `-${Number(item.stake).toFixed(2)}`}
                   </div>
                 </div>
               </CardContent>
