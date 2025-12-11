@@ -105,8 +105,7 @@ export default function Lobby() {
     return null; 
   }
 
-  const networkFee = mockEscrowAdapter.getEstimatedNetworkFee(state.selectedAsset);
-  const totalCost = state.stakeAmount + networkFee;
+  const totalCost = state.stakeAmount;
   
   const currentBalance = state.wallet.balances[state.selectedAsset] || 0;
   const isBalanceSufficient = currentBalance >= totalCost;
@@ -203,18 +202,6 @@ export default function Lobby() {
             </span>
           </div>
           
-          {/* Network Fee Estimate */}
-          <div className="flex justify-between text-sm pt-2 border-t border-white/5">
-             <div className="flex items-center gap-1 text-muted-foreground">
-               <span>{t('Est. Network Fee', 'Est. Network Fee')}</span>
-               <Info className="h-3 w-3" />
-             </div>
-             <span className="font-mono text-xs text-muted-foreground">
-               {networkFee > 0 ? `~${networkFee.toFixed(5)} ${state.selectedAsset}` : '0.00'}
-             </span>
-          </div>
-          <p className="text-[10px] text-muted-foreground/60 text-right">{t('Paid by you (deducted from balance)', 'Paid by you (deducted from balance)')}</p>
-
           <div className="border-t border-white/10 my-2 pt-2 flex justify-between text-lg font-display font-bold">
             <span className="text-primary">{t('Potential Win', 'Potential Win')}</span>
             <span className="text-primary text-glow">
