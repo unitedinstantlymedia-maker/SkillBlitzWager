@@ -3,10 +3,13 @@ import { Gamepad2, Wallet, History, Share2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
+import { ShareDialog } from "@/components/share/ShareDialog";
 
 export function BottomNav() {
   const [location] = useLocation();
   const { toast } = useToast();
+  const [shareOpen, setShareOpen] = useState(false);
 
   const isActive = (path: string) => {
     if (path === '/games' && (location === '/' || location.startsWith('/games') || location.startsWith('/lobby'))) return true;
@@ -14,24 +17,24 @@ export function BottomNav() {
   };
 
   const handleShare = async () => {
+    // Try native share first
     const shareData = {
       title: 'SkillBlitz',
       text: 'Play 1v1 crypto skill games with me on SkillBlitz! 🎮💸',
       url: window.location.origin
     };
 
-    try {
-      if (navigator.share) {
+    if (navigator.share && /Mobi|Android/i.test(navigator.userAgent)) {
+      try {
         await navigator.share(shareData);
-      } else {
-        await navigator.clipboard.writeText(`${shareData.text} Try now: ${shareData.url}`);
-        toast({
-          title: "Link Copied!",
-          description: "Share link copied to clipboard.",
-        });
+      } catch (err) {
+        // If user cancelled or failed, just fallback to dialog? 
+        // Or ignore cancellation.
+        console.log('Native share cancelled or failed', err);
       }
-    } catch (err) {
-      console.error('Error sharing:', err);
+    } else {
+      // On desktop or if native share not preferred, open custom dialog
+      setShareOpen(true);
     }
   };
 
@@ -77,6 +80,7 @@ export function BottomNav() {
 
   return (
     <div className="fixed bottom-6 left-0 right-0 z-50 px-6 flex justify-center pointer-events-none">
+      <ShareDialog open={shareOpen} onOpenChange={setShareOpen} />
       <nav className="pointer-events-auto flex items-center gap-4 p-2 rounded-3xl bg-black/40 backdrop-blur-xl border border-white/5 shadow-2xl relative">
         {navItems.map((item) => {
           const active = isActive(item.path);
