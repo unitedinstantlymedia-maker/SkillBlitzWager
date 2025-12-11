@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { LANGUAGES, Language } from '@/data/languages';
-import { TRANSLATIONS } from '@/data/translations';
+import { TRANSLATIONS } from '../data/translations';
 
 type LanguageContextType = {
   currentLanguage: Language;

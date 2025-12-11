@@ -70,7 +70,7 @@ export function BottomNav() {
     },
     { 
       path: '#share', 
-      label: t('Profile', 'Profile'), 
+      label: t('Share', 'Share'), 
       icon: Share2,
       color: 'from-orange-500/20 to-amber-500/20',
       borderColor: 'border-orange-500/50',
