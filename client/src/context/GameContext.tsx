@@ -30,7 +30,7 @@ interface GameContextValue {
     setStake: (amount: number) => void;
     startSearch: () => Promise<void>;
     cancelSearch: () => void;
-    finishMatch: (result: 'win' | 'loss') => Promise<void>;
+    finishMatch: (result: 'win' | 'loss' | 'draw') => Promise<void>;
   };
   dispatch: React.Dispatch<any>; // Deprecated
 }

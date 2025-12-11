@@ -18,7 +18,7 @@ export default function Play() {
     }
   }, [state.currentMatch, setLocation]);
 
-  const handleFinish = async (result: 'win' | 'loss') => {
+  const handleFinish = async (result: 'win' | 'loss' | 'draw') => {
     await actions.finishMatch(result);
     setLocation('/result');
   };
@@ -59,7 +59,15 @@ export default function Play() {
             className="bg-green-600 hover:bg-green-700 text-white h-8 px-3"
             onClick={() => handleFinish('win')}
           >
-            Win
+            {t('Victory', 'Victory')}
+          </Button>
+          <Button 
+            size="sm" 
+            variant="outline" 
+            className="bg-yellow-500/80 hover:bg-yellow-600 text-white h-8 px-3 border-none"
+            onClick={() => handleFinish('draw')}
+          >
+            {t('Draw', 'Draw')}
           </Button>
           <Button 
             size="sm" 
@@ -67,7 +75,7 @@ export default function Play() {
             className="h-8 px-3"
             onClick={() => handleFinish('loss')}
           >
-            Lose
+            {t('Defeat', 'Defeat')}
           </Button>
         </div>
       </div>
