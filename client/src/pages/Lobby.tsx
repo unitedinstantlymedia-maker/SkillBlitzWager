@@ -179,7 +179,7 @@ export default function Lobby() {
           <div className="relative">
             <Input
               type="number"
-              placeholder="Custom Amount"
+              placeholder={t('Custom Amount', 'Custom Amount')}
               value={customStake}
               onChange={handleCustomStakeChange}
               disabled={isTon}
