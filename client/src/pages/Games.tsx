@@ -6,35 +6,35 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import battleshipImage from '@assets/stock_images/battleship_navy_ship_31f24312.jpg';
 import stockImage from '@assets/stock_images/classic_tetris_game__1bffc655.jpg'; // Keeping this as backup or unused if I replace it
-import generatedTetrisImage from '@assets/generated_images/8-bit_pixel_art_tetris_game.png';
-import generatedChessImage from '@assets/generated_images/8-bit_pixel_art_chess_game.png';
-import generatedCheckersImage from '@assets/generated_images/8-bit_pixel_art_checkers_game.png';
-import generatedBattleshipImage from '@assets/generated_images/8-bit_pixel_art_battleship_game.png';
+import elegantChessImage from '@assets/generated_images/elegant_grayscale_chess_with_blue_accent.png';
+import elegantTetrisImage from '@assets/generated_images/elegant_grayscale_tetris_blocks_with_purple_accent.png';
+import elegantCheckersImage from '@assets/generated_images/elegant_grayscale_checkers_with_orange_accent.png';
+import elegantBattleshipImage from '@assets/generated_images/elegant_grayscale_battleship_with_teal_accent.png';
 import { useLanguage } from "@/context/LanguageContext";
 
 const GAMES: { id: GameType; name: string; image: string; players: string }[] = [
   { 
     id: 'Chess', 
     name: 'Chess', 
-    image: generatedChessImage,
+    image: elegantChessImage,
     players: '1.2k'
   },
   { 
     id: 'Tetris', 
     name: 'TETRIS', 
-    image: generatedTetrisImage,
+    image: elegantTetrisImage,
     players: '850'
   },
   { 
     id: 'Checkers', 
     name: 'Checkers Pro', 
-    image: generatedCheckersImage,
+    image: elegantCheckersImage,
     players: '430'
   },
   { 
     id: 'Battleship', 
     name: 'Battleship', 
-    image: generatedBattleshipImage,
+    image: elegantBattleshipImage,
     players: '342'
   }
 ];
@@ -62,17 +62,18 @@ export default function Games() {
             transition={{ delay: index * 0.1 }}
           >
             <Card 
-              className="group relative overflow-hidden cursor-pointer border-white/10 hover:border-primary/50 transition-colors"
+              className="group relative overflow-hidden cursor-pointer border-white/10 hover:border-white/20 transition-all duration-500 backdrop-blur-sm bg-black/40"
               onClick={() => handleSelectGame(game.id)}
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/40 to-transparent z-10" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-10" />
+              <div className="absolute inset-0 bg-black/20 z-[5] backdrop-blur-[1px]" />
               <div 
-                className="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
+                className="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-700 ease-out grayscale-[0.2]"
                 style={{ backgroundImage: `url(${game.image})` }}
               />
               
               <CardContent className="relative z-20 p-6 h-32 flex flex-col justify-center">
-                <h2 className="text-2xl font-display font-bold uppercase tracking-wider text-white group-hover:text-primary transition-colors">
+                <h2 className="text-2xl font-display font-bold uppercase tracking-wider text-white group-hover:text-white/90 transition-colors drop-shadow-md">
                   {t(game.name, game.name)}
                 </h2>
                 <p className="text-sm text-muted-foreground font-mono mt-1 flex items-center gap-2">
