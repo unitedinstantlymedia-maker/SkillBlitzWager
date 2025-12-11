@@ -1,10 +1,8 @@
 import { BottomNav } from "./BottomNav";
-import { Header } from "./Header";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-background text-foreground font-sans flex flex-col">
-      <Header />
       {/* 
         Increased bottom padding to pb-40 (10rem / 160px) to ensure the 
         floating bottom navigation bar (fixed at bottom) never covers 

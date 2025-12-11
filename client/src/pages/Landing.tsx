@@ -2,12 +2,17 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
+import { LanguageSelector } from "@/components/ui/LanguageSelector";
 
 export default function Landing() {
   const { t } = useLanguage();
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[80vh] space-y-8 text-center">
+    <div className="flex flex-col items-center justify-center min-h-[80vh] space-y-8 text-center relative">
+      <div className="absolute top-0 right-0">
+        <LanguageSelector />
+      </div>
+
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
