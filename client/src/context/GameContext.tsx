@@ -170,7 +170,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     setIsFinding(false);
   };
 
-  const finishMatch = async (result: 'win' | 'loss') => {
+  const finishMatch = async (result: 'win' | 'loss' | 'draw') => {
     if (!currentMatch) return;
 
     // Settle

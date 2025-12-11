@@ -32,20 +32,25 @@ export class MockEscrowAdapter {
     // Ensure stake is treated as number
     const safeStake = Number(stake);
     const pot = safeStake * 2;
-    const fee = pot * FEE_RATE;
+    let fee = pot * FEE_RATE;
     let payout = 0;
 
     console.log(`[Escrow] Settling match ${matchId} for stake: ${safeStake} (${asset})`);
-    console.log(`[Escrow] Calculation: Pot = ${pot}, Fee Rate = ${FEE_RATE}, Fee = ${fee}`);
 
     if (result === 'win') {
+      console.log(`[Escrow] Calculation: Pot = ${pot}, Fee Rate = ${FEE_RATE}, Fee = ${fee}`);
       payout = pot - fee;
       // Credit payout to wallet
       walletAdapter.credit(asset, payout);
     } else if (result === 'draw') {
-        payout = safeStake; // Fallback
-        // Refund stake (minus fees)
+        // DRAW RULE: Full refund, no commission
+        fee = 0;
+        payout = safeStake; 
+        console.log(`[Escrow] Draw: Refund full stake ${payout}, Fee = ${fee}`);
         walletAdapter.credit(asset, payout);
+    } else {
+        // Loss
+        console.log(`[Escrow] Loss: Payout 0`);
     }
     
     console.log(`[Escrow] Settled match ${matchId}: Result ${result}, Payout ${payout}, Fee ${fee}`);
