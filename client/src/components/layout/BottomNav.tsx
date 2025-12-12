@@ -85,6 +85,7 @@ export function BottomNav() {
       <ShareDialog open={shareOpen} onOpenChange={setShareOpen} />
       <nav className="pointer-events-auto flex items-center gap-4 p-2 rounded-3xl bg-black/40 backdrop-blur-xl border border-white/5 shadow-2xl relative">
         {navItems.map((item) => {
+          const isShare = item.path === '#share';
           const active = isActive(item.path) || isShare; // Share is always highlighted
           
           const Content = () => (
