@@ -21,8 +21,8 @@ export function BottomNav() {
   const handleShare = async () => {
     // Try native share first
     const shareData = {
-      title: 'SkillBlitz',
-      text: 'Play 1v1 crypto skill games with me on SkillBlitz! 🎮💸',
+      title: 'SKILLS2CRYPTO',
+      text: 'Play 1v1 crypto skill games with me on SKILLS2CRYPTO! 🎮💸',
       url: window.location.origin
     };
 

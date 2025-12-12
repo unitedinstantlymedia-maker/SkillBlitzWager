@@ -41,7 +41,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [walletState, setWalletState] = useState<WalletState>(walletStore.getState());
   // Initialize from localStorage if available
   const [selectedGame, setSelectedGame] = useState<Game | null>(() => {
-    const stored = localStorage.getItem('skillblitz_selected_game');
+    const stored = localStorage.getItem('skills2crypto_selected_game');
     return stored ? (stored as Game) : null;
   });
   
@@ -54,7 +54,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   // Persist selectedGame
   useEffect(() => {
     if (selectedGame) {
-      localStorage.setItem('skillblitz_selected_game', selectedGame);
+      localStorage.setItem('skills2crypto_selected_game', selectedGame);
     }
   }, [selectedGame]);
 

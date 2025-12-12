@@ -1,7 +1,7 @@
 import { MatchParams, Match, getQueueKey } from "@/core/types";
 
-const STORAGE_KEY_QUEUE = 'skillblitz_queue';
-const STORAGE_KEY_MATCHES = 'skillblitz_matches';
+const STORAGE_KEY_QUEUE = 'skills2crypto_queue';
+const STORAGE_KEY_MATCHES = 'skills2crypto_matches';
 
 type QueueEntry = MatchParams & { playerId: string, timestamp: number };
 type Queue = Record<string, QueueEntry>;

@@ -1,4 +1,4 @@
-# SkillBlitzWager (Prototype)
+# SKILLS2CRYPTO
 
 Mobile-first web app prototype for 1v1 skill games with crypto-only wagers.
 

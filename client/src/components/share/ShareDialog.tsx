@@ -21,7 +21,7 @@ interface ShareDialogProps {
 export function ShareDialog({ open, onOpenChange }: ShareDialogProps) {
   const { toast } = useToast();
   const url = window.location.origin;
-  const text = 'Play 1v1 crypto skill games with me on SkillBlitz! 🎮💸';
+  const text = 'Play 1v1 crypto skill games with me on SKILLS2CRYPTO! 🎮💸';
   const fullText = `${text} Try now: ${url}`;
 
   const handleCopy = async () => {
@@ -104,7 +104,7 @@ export function ShareDialog({ open, onOpenChange }: ShareDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md bg-zinc-950 border-white/10 text-white">
         <DialogHeader>
-          <DialogTitle className="text-xl font-display font-bold uppercase tracking-wider text-center">Share SkillBlitz</DialogTitle>
+          <DialogTitle className="text-xl font-display font-bold uppercase tracking-wider text-center">Share SKILLS2CRYPTO</DialogTitle>
           <DialogDescription className="text-center text-muted-foreground">
             Invite your friends to battle for crypto!
           </DialogDescription>

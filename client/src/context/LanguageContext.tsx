@@ -15,7 +15,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   // Load from local storage on mount
   useEffect(() => {
-    const stored = localStorage.getItem('skillblitz_language');
+    const stored = localStorage.getItem('skills2crypto_language');
     if (stored && LANGUAGES.find(l => l.code === stored)) {
       setLanguageCode(stored);
     }
@@ -23,7 +23,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   const setLanguage = (code: string) => {
     setLanguageCode(code);
-    localStorage.setItem('skillblitz_language', code);
+    localStorage.setItem('skills2crypto_language', code);
   };
 
   const currentLanguage = LANGUAGES.find(l => l.code === languageCode) || LANGUAGES[0];

@@ -1,6 +1,6 @@
 import { Asset, HistoryEntry } from "@/core/types";
 
-const STORAGE_KEY_HISTORY = 'skillblitz_history';
+const STORAGE_KEY_HISTORY = 'skills2crypto_history';
 
 export class HistoryStore {
   private static instance: HistoryStore;
