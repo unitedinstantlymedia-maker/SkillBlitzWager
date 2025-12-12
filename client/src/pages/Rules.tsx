@@ -55,17 +55,6 @@ export default function Rules() {
           </CardContent>
         </Card>
 
-        <Card className="bg-destructive/10 border-destructive/20">
-          <CardHeader className="pb-2">
-            <div className="flex items-center gap-2 text-destructive">
-              <AlertTriangle className="h-5 w-5" />
-              <CardTitle className="font-display uppercase tracking-wide text-lg">{t('Prototype Disclaimer', 'Prototype Disclaimer')}</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent className="text-sm text-destructive-foreground/80 leading-relaxed">
-            {t('This is a prototype. Games are simulated for demonstration. Do not use real funds yet.', 'This is a prototype. Games are simulated for demonstration. Do not use real funds yet.')}
-          </CardContent>
-        </Card>
       </div>
     </div>
   );
