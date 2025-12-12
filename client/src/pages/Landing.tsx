@@ -29,9 +29,6 @@ export default function Landing() {
             CRYPTO
           </h1>
         </div>
-        <p className="text-muted-foreground text-lg font-light tracking-wide pt-4">
-          {t('1v1 Crypto Wagers', '1v1 Crypto Wagers')}
-        </p>
       </motion.div>
 
       <motion.div 
@@ -51,6 +48,10 @@ export default function Landing() {
             {t('Rules & Risks', 'Rules & Risks')}
           </Button>
         </Link>
+
+        <p className="text-2xl font-light tracking-wide text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.5)] pt-4">
+          {t('1v1 Crypto Wagers', '1v1 Crypto Wagers')}
+        </p>
 
         <div className="text-xs text-muted-foreground font-mono mt-2 text-center">
           USDT • ETH • TON
