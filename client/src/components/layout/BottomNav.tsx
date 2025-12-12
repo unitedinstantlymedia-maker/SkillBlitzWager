@@ -54,16 +54,16 @@ export function BottomNav() {
       path: '/wallet', 
       label: t('Wallet', 'Wallet'), 
       icon: Wallet,
-      color: 'from-green-500/20 to-emerald-500/20',
-      borderColor: 'border-green-500/50',
-      glowColor: 'shadow-green-500/50',
-      iconColor: 'text-green-400'
+      color: 'from-primary/20 to-green-500/20', // Matches Play Now primary/green style but semi-transparent
+      borderColor: 'border-primary/50',
+      glowColor: 'shadow-primary/50',
+      iconColor: 'text-primary'
     },
     { 
       path: '/history', 
       label: t('History', 'History'), 
       icon: History,
-      color: 'from-purple-500/20 to-pink-500/20',
+      color: 'from-purple-500/20 to-pink-500/20', // Same semi-transparent style
       borderColor: 'border-purple-500/50',
       glowColor: 'shadow-purple-500/50',
       iconColor: 'text-purple-400'
@@ -72,7 +72,7 @@ export function BottomNav() {
       path: '#share', 
       label: t('Share', 'Share'), 
       icon: Share2,
-      color: 'from-blue-600/20 to-indigo-600/20', // Matched opacity to /20 like Home
+      color: 'from-blue-600/20 to-indigo-600/20', // Same semi-transparent style
       borderColor: 'border-blue-400/50',
       glowColor: 'shadow-blue-500/60',
       iconColor: 'text-blue-200',
