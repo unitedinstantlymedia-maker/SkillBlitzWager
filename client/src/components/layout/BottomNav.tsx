@@ -45,19 +45,19 @@ export function BottomNav() {
       path: '/', 
       label: t('Home', 'Home'), 
       icon: Gamepad2,
-      color: 'from-green-500/20 to-emerald-500/20',
-      borderColor: 'border-green-500/50',
-      glowColor: 'shadow-green-500/50',
-      iconColor: 'text-green-400'
+      color: 'from-blue-500/20 to-cyan-500/20',
+      borderColor: 'border-blue-500/50',
+      glowColor: 'shadow-blue-500/50',
+      iconColor: 'text-blue-400'
     },
     { 
       path: '/wallet', 
       label: t('Wallet', 'Wallet'), 
       icon: Wallet,
-      color: 'from-blue-500/20 to-cyan-500/20',
-      borderColor: 'border-blue-500/50',
-      glowColor: 'shadow-blue-500/50',
-      iconColor: 'text-blue-400'
+      color: 'from-green-500/20 to-emerald-500/20',
+      borderColor: 'border-green-500/50',
+      glowColor: 'shadow-green-500/50',
+      iconColor: 'text-green-400'
     },
     { 
       path: '/history', 
@@ -72,10 +72,10 @@ export function BottomNav() {
       path: '#share', 
       label: t('Share', 'Share'), 
       icon: Share2,
-      color: 'from-orange-500/20 to-amber-500/20',
-      borderColor: 'border-orange-500/50',
-      glowColor: 'shadow-orange-500/50',
-      iconColor: 'text-orange-400',
+      color: 'from-blue-600/30 to-indigo-600/30',
+      borderColor: 'border-blue-400/50',
+      glowColor: 'shadow-blue-500/60',
+      iconColor: 'text-blue-200',
       isAction: true
     }
   ];
@@ -85,8 +85,7 @@ export function BottomNav() {
       <ShareDialog open={shareOpen} onOpenChange={setShareOpen} />
       <nav className="pointer-events-auto flex items-center gap-4 p-2 rounded-3xl bg-black/40 backdrop-blur-xl border border-white/5 shadow-2xl relative">
         {navItems.map((item) => {
-          const active = isActive(item.path);
-          const isShare = item.path === '#share';
+          const active = isActive(item.path) || isShare; // Share is always highlighted
           
           const Content = () => (
             <motion.div
