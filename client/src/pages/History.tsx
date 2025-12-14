@@ -11,7 +11,7 @@ export default function History() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-center items-center">
         <h1 className="text-2xl font-display font-bold uppercase tracking-wider">{t('Match History', 'Match History')}</h1>
       </div>
 
