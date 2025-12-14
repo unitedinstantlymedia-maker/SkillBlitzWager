@@ -83,7 +83,7 @@ export function BottomNav() {
   return (
     <div className="fixed bottom-4 sm:bottom-6 left-0 right-0 z-50 px-2 sm:px-6 flex justify-center pointer-events-none">
       <ShareDialog open={shareOpen} onOpenChange={setShareOpen} />
-      <nav className="pointer-events-auto w-full sm:w-auto max-w-lg sm:max-w-none flex items-center justify-between sm:justify-center gap-2 sm:gap-4 p-1.5 sm:p-2 rounded-2xl sm:rounded-3xl bg-black/80 sm:bg-black/40 backdrop-blur-xl border border-white/10 sm:border-white/5 shadow-2xl relative">
+      <nav className="pointer-events-auto w-full sm:w-auto sm:min-w-[400px] flex items-center justify-between gap-2 p-1.5 sm:p-2 rounded-2xl sm:rounded-3xl bg-black/80 sm:bg-black/40 backdrop-blur-xl border border-white/10 sm:border-white/5 shadow-2xl relative">
         {navItems.map((item) => {
           const isShare = item.path === '#share';
           const active = isActive(item.path);
@@ -91,7 +91,7 @@ export function BottomNav() {
           const Content = () => (
             <motion.div
               className={cn(
-                "relative flex-1 sm:flex-none min-w-0 sm:min-w-[6rem] sm:w-24 h-14 sm:h-16 rounded-xl sm:rounded-2xl flex flex-col items-center justify-center gap-0.5 sm:gap-1 transition-all duration-300",
+                "relative w-full h-14 sm:h-16 rounded-xl sm:rounded-2xl flex flex-col items-center justify-center gap-0.5 sm:gap-1 transition-all duration-300",
                 "border backdrop-blur-md shadow-lg cursor-pointer overflow-hidden px-1",
                  item.color, // Always apply solid semi-transparent color
                 active 
@@ -140,7 +140,7 @@ export function BottomNav() {
 
           if (isShare) {
             return (
-              <div key={item.path} onClick={handleShare} className="relative group cursor-pointer flex-1 sm:flex-none min-w-0">
+              <div key={item.path} onClick={handleShare} className="relative group cursor-pointer flex-1 min-w-0">
                  <Content />
               </div>
             );
@@ -148,7 +148,7 @@ export function BottomNav() {
 
           return (
             <Link key={item.path} href={item.path}>
-              <a className="relative group flex-1 sm:flex-none min-w-0">
+              <a className="relative group flex-1 min-w-0">
                 <Content />
                 
                 {/* Reflection/Shadow underneath when lifted */}
