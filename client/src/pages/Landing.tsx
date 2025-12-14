@@ -52,8 +52,28 @@ export default function Landing() {
           </Button>
         </Link>
 
-        <div className="text-xs text-muted-foreground font-mono mt-2 text-center">
-          USDT • ETH • TON
+        <div className="flex justify-center items-center gap-4 mt-4">
+          {/* USDT: Green circle with white T */}
+          <div className="flex items-center justify-center" title="USDT">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="10" fill="#26A17B" />
+              <path d="M10 8H14V10H12.5V16H11.5V10H10V8Z" fill="white" stroke="white" strokeWidth="1" />
+            </svg>
+          </div>
+
+          {/* ETH: Gray diamond */}
+          <div className="flex items-center justify-center" title="ETH">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L19 12L12 22L5 12L12 2Z" fill="#8C8C8C" />
+            </svg>
+          </div>
+
+          {/* TON: Blue triangle */}
+          <div className="flex items-center justify-center" title="TON">
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 4L20 19H4L12 4Z" fill="#0088CC" />
+            </svg>
+          </div>
         </div>
       </motion.div>
     </div>
