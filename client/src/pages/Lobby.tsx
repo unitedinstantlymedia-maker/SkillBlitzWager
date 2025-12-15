@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useLocation } from "wouter";
 import { useState } from "react";
-import { ArrowLeft, Coins, Zap, Info, Loader2, X, Ship } from "lucide-react";
+import { ArrowLeft, Coins, Zap, Info, Loader2, X, Ship, UserPlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from "wouter";
 import { mockEscrowAdapter } from "@/core/escrow/MockEscrowAdapter";
@@ -20,6 +20,8 @@ export default function Lobby() {
   const { state, actions } = useGame();
   const [, setLocation] = useLocation();
   const [customStake, setCustomStake] = useState<string>("");
+  const [isChallengeMode, setIsChallengeMode] = useState(false);
+  const [friendId, setFriendId] = useState("");
   const { toast } = useToast();
   const { t } = useLanguage();
 
@@ -218,14 +220,51 @@ export default function Lobby() {
           >
             <X className="mr-2 h-5 w-5" /> {t('Cancel Search', 'Cancel Search')}
           </Button>
+        ) : isChallengeMode ? (
+          <div className="space-y-3">
+             <div className="relative">
+                <Input 
+                  placeholder={t("Enter Friend's ID", "Enter Friend's ID")} 
+                  value={friendId}
+                  onChange={(e) => setFriendId(e.target.value)}
+                  className="h-12 bg-black/20 border-white/10 font-mono text-center"
+                />
+             </div>
+             <div className="flex gap-3">
+                 <Button 
+                    variant="outline"
+                    onClick={() => setIsChallengeMode(false)}
+                    className="flex-1 h-14 text-sm font-display font-bold uppercase tracking-widest hover:bg-white/5"
+                 >
+                    {t('Back', 'Back')}
+                 </Button>
+                 <Button 
+                    onClick={handleStartSearch} 
+                    disabled={isTon || !friendId.trim()} 
+                    className="flex-[2] h-14 text-lg font-display font-bold uppercase tracking-widest bg-primary text-primary-foreground hover:bg-primary/90 border-glow disabled:opacity-50"
+                 >
+                    {t('Continue', 'Continue')}
+                 </Button>
+             </div>
+          </div>
         ) : (
-          <Button 
-            onClick={handleStartSearch}
-            disabled={isTon} 
-            className="w-full h-14 text-lg font-display font-bold uppercase tracking-widest bg-primary text-primary-foreground hover:bg-primary/90 border-glow disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <Zap className="mr-2 h-5 w-5" /> {t('Find Match', 'Find Match')}
-          </Button>
+          <div className="flex gap-3">
+            <Button 
+              onClick={handleStartSearch}
+              disabled={isTon} 
+              className="flex-1 h-14 text-sm sm:text-base font-display font-bold uppercase tracking-widest bg-primary text-primary-foreground hover:bg-primary/90 border-glow disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Zap className="mr-2 h-4 w-4 sm:h-5 sm:w-5" /> {t('Find Match', 'Find Match')}
+            </Button>
+            <Button 
+              onClick={() => setIsChallengeMode(true)}
+              disabled={isTon}
+              variant="outline" 
+              className="flex-1 h-14 text-sm sm:text-base font-display font-bold uppercase tracking-widest border-white/10 hover:bg-white/5 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <UserPlus className="mr-2 h-4 w-4 sm:h-5 sm:w-5" /> {t('Challenge Friend', 'Challenge Friend')}
+            </Button>
+          </div>
         )}
         
         {state.isFinding && (
