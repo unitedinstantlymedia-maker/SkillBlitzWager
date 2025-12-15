@@ -233,9 +233,15 @@ export default function Lobby() {
         ) : showChallengeLink ? (
           <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
              <div className="bg-card/50 border border-white/10 rounded-lg p-6 text-center space-y-4">
-                <div className="flex items-center justify-center gap-0.5 text-lg sm:text-xl font-display font-bold tracking-tight text-primary flex-wrap">
+                <div className="flex items-center justify-center gap-1 text-lg sm:text-xl font-display font-bold tracking-tight text-primary flex-wrap">
                   <span className="text-white">skills</span>
-                  <img src={logoImage} alt="2" className="h-9 w-9 object-contain -mt-1 drop-shadow-[0_0_8px_rgba(255,255,255,0.6)]" />
+                  <div className="relative inline-flex items-center justify-center h-16 w-16 -my-6 mx-1">
+                    <img 
+                      src={logoImage} 
+                      alt="2" 
+                      className="w-full h-full object-contain mix-blend-screen drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]" 
+                    />
+                  </div>
                   <span className="text-white">crypto.com</span>
                   <span className="text-muted-foreground ml-0.5 truncate max-w-[150px]">/{challengeLink.split('/').pop()}</span>
                 </div>
