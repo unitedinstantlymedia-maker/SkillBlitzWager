@@ -15,7 +15,7 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'We support USDT, ETH, and TON. Ensure you have sufficient balance before playing. Wagers are locked in escrow during the match.': 'We support USDT, ETH, and TON. Ensure you have sufficient balance before playing. Wagers are locked in escrow during the match.',
     'A flat 3% fee is deducted from the total pot of every match to support platform development and maintenance.': 'A flat 3% fee is deducted from the total pot of every match to support platform development and maintenance.',
     'This is a prototype. Games are simulated for demonstration. Do not use real funds yet.': 'This is a prototype. Games are simulated for demonstration. Do not use real funds yet.',
-    'Challenge Friend': 'Challenge Friend', 'Enter Friend\'s ID': 'Enter Friend\'s ID', 'Continue': 'Continue'
+    'Challenge Friend': 'Challenge Friend', 'Enter your name or nickname': 'Enter your name or nickname', 'This will be shown to your opponent': 'This will be shown to your opponent', 'Continue': 'Continue'
   },
   'ru': {
     'Select Language': 'Выбрать язык', 'Search language...': 'Поиск языка...', 'No language found.': 'Язык не найден.',
@@ -34,7 +34,7 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'We support USDT, ETH, and TON. Ensure you have sufficient balance before playing. Wagers are locked in escrow during the match.': 'Мы поддерживаем USDT, ETH и TON. Убедитесь, что у вас достаточно средств перед игрой. Ставки блокируются на эскроу во время матча.',
     'A flat 3% fee is deducted from the total pot of every match to support platform development and maintenance.': 'Фиксированная комиссия 3% вычитается из общего банка каждого матча для поддержки разработки и обслуживания платформы.',
     'This is a prototype. Games are simulated for demonstration. Do not use real funds yet.': 'Это прототип. Игры симулируются для демонстрации. Не используйте реальные средства.',
-    'Challenge Friend': 'Вызвать друга', 'Enter Friend\'s ID': 'Введите ID друга', 'Continue': 'Продолжить'
+    'Challenge Friend': 'Вызвать друга', 'Enter your name or nickname': 'Введите имя или никнейм', 'This will be shown to your opponent': 'Это увидит ваш соперник', 'Continue': 'Продолжить'
   },
   'es': {
     'Select Language': 'Seleccionar Idioma', 'Search language...': 'Buscar idioma...', 'No language found.': 'Idioma no encontrado.',
@@ -52,7 +52,7 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'We support USDT, ETH, and TON. Ensure you have sufficient balance before playing. Wagers are locked in escrow during the match.': 'Admitimos USDT, ETH y TON. Asegúrate de tener saldo suficiente antes de jugar. Las apuestas se bloquean en depósito de garantía durante la partida.',
     'A flat 3% fee is deducted from the total pot of every match to support platform development and maintenance.': 'Se deduce una tarifa fija del 3% del bote total de cada partida para apoyar el desarrollo y mantenimiento de la plataforma.',
     'This is a prototype. Games are simulated for demonstration. Do not use real funds yet.': 'Esto es un prototipo. Los juegos son simulados para demostración. No uses fondos reales todavía.',
-    'Challenge Friend': 'Desafiar Amigo', 'Enter Friend\'s ID': 'Ingresar ID de Amigo', 'Continue': 'Continuar'
+    'Challenge Friend': 'Desafiar Amigo', 'Enter your name or nickname': 'Ingresa tu nombre o apodo', 'This will be shown to your opponent': 'Esto se mostrará a tu oponente', 'Continue': 'Continuar'
   },
   'he': {
     'Select Language': 'בחר שפה', 'Search language...': 'חפש שפה...', 'No language found.': 'לא נמצאה שפה.',
@@ -70,7 +70,7 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'We support USDT, ETH, and TON. Ensure you have sufficient balance before playing. Wagers are locked in escrow during the match.': 'המשחק תומך במטבעות קריפטו מובילים. ודא שיש לך יתרה מספקת בארנק לפני תחילת המשחק. במהלך המשחק הכספים ננעלים בבטחה עד סיום המשחק והתשלום.',
     'A flat 3% fee is deducted from the total pot of every match to support platform development and maintenance.': 'עמלה קבועה של 3% מנוכה מסך הקופה של כל משחק לתמיכה בפיתוח ותחזוקת הפלטפורמה.',
     'This is a prototype. Games are simulated for demonstration. Do not use real funds yet.': 'זהו אב טיפוס. המשחקים מסומלצים להדגמה. אל תשתמש בכספים אמיתיים עדיין.',
-    'Challenge Friend': 'אתגר חבר', 'Enter Friend\'s ID': 'הכנס מזהה חבר', 'Continue': 'המשך'
+    'Challenge Friend': 'אתגר חבר', 'Enter your name or nickname': 'הכנס שם או כינוי', 'This will be shown to your opponent': 'זה יוצג ליריב שלך', 'Continue': 'המשך'
   },
   'hi': {
     'Select Language': 'भाषा चुनें', 'Search language...': 'भाषा खोजें...', 'No language found.': 'कोई भाषा नहीं मिली।',
@@ -88,6 +88,6 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'We support USDT, ETH, and TON. Ensure you have sufficient balance before playing. Wagers are locked in escrow during the match.': 'हम USDT, ETH, और TON का समर्थन करते हैं। खेलने से पहले सुनिश्चित करें कि आपके पास पर्याप्त शेष राशि है। दांव मैच के दौरान एस्क्रो में लॉक हो जाते हैं।',
     'A flat 3% fee is deducted from the total pot of every match to support platform development and maintenance.': 'प्लेटफ़ॉर्म विकास और रखरखाव का समर्थन करने के लिए प्रत्येक मैच के कुल पॉट से 3% शुल्क काटा जाता है।',
     'This is a prototype. Games are simulated for demonstration. Do not use real funds yet.': 'यह एक प्रोटोटाइप है। खेल प्रदर्शन के लिए सिम्युलेटेड हैं। अभी वास्तविक धन का उपयोग न करें।',
-    'Challenge Friend': 'दोस्त को चुनौती दें', 'Enter Friend\'s ID': 'दोस्त का आईडी दर्ज करें', 'Continue': 'जारी रखें'
+    'Challenge Friend': 'दोस्त को चुनौती दें', 'Enter your name or nickname': 'अपना नाम या उपनाम दर्ज करें', 'This will be shown to your opponent': 'यह आपके प्रतिद्वंद्वी को दिखाया जाएगा', 'Continue': 'जारी रखें'
   }
 };

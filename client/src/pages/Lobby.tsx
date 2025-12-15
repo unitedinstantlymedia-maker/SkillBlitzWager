@@ -21,7 +21,7 @@ export default function Lobby() {
   const [, setLocation] = useLocation();
   const [customStake, setCustomStake] = useState<string>("");
   const [isChallengeMode, setIsChallengeMode] = useState(false);
-  const [friendId, setFriendId] = useState("");
+  const [playerName, setPlayerName] = useState("");
   const { toast } = useToast();
   const { t } = useLanguage();
 
@@ -224,11 +224,12 @@ export default function Lobby() {
           <div className="space-y-3">
              <div className="relative">
                 <Input 
-                  placeholder={t("Enter Friend's ID", "Enter Friend's ID")} 
-                  value={friendId}
-                  onChange={(e) => setFriendId(e.target.value)}
+                  placeholder={t("This will be shown to your opponent", "This will be shown to your opponent")} 
+                  value={playerName}
+                  onChange={(e) => setPlayerName(e.target.value)}
                   className="h-12 bg-black/20 border-white/10 font-mono text-center"
                 />
+                <p className="text-xs text-center text-muted-foreground mt-1 uppercase tracking-widest">{t('Enter your name or nickname', 'Enter your name or nickname')}</p>
              </div>
              <div className="flex gap-2">
                  <Button 
@@ -240,7 +241,7 @@ export default function Lobby() {
                  </Button>
                  <Button 
                     onClick={handleStartSearch} 
-                    disabled={isTon || !friendId.trim()} 
+                    disabled={isTon || !playerName.trim()} 
                     className="flex-[2] h-14 text-lg font-display font-bold uppercase tracking-widest bg-primary text-primary-foreground hover:bg-primary/90 border-glow disabled:opacity-50"
                  >
                     {t('Continue', 'Continue')}
