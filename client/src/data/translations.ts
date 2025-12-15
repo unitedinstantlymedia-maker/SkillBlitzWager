@@ -16,7 +16,7 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'A flat 3% fee is deducted from the total pot of every match to support platform development and maintenance.': 'A flat 3% fee is deducted from the total pot of every match to support platform development and maintenance.',
     'This is a prototype. Games are simulated for demonstration. Do not use real funds yet.': 'This is a prototype. Games are simulated for demonstration. Do not use real funds yet.',
     'Challenge Friend': 'Challenge Friend', 'Enter your name or nickname': 'Enter your name or nickname', 'This will be shown to your opponent': 'This will be shown to your opponent', 'Continue': 'Continue', 'Copied!': 'Copied!', 'Challenge link copied to clipboard': 'Challenge link copied to clipboard', 'Share this link with your friend to start the match.': 'Share this link with your friend to start the match.', 'Done': 'Done',
-    'Challenge': 'Challenge', 'Incoming Challenge': 'Incoming Challenge', 'wants to play': 'wants to play', 'Accept Challenge': 'Accept Challenge', 'Wager': 'Wager', 'Opponent': 'Opponent'
+    'Challenge': 'Challenge', 'Incoming Challenge': 'Incoming Challenge', 'wants to play': 'wants to play', 'Accept Challenge': 'Accept Challenge', 'Wager': 'Wager', 'Opponent': 'Opponent', 'Game': 'Game', 'Challenge not found or expired': 'Challenge not found or expired', 'Please ask your friend to create a new challenge.': 'Please ask your friend to create a new challenge.', 'Wallet Not Connected': 'Wallet Not Connected', 'Please connect your wallet to accept the challenge.': 'Please connect your wallet to accept the challenge.'
   },
   'ru': {
     'Select Language': 'Выбрать язык', 'Search language...': 'Поиск языка...', 'No language found.': 'Язык не найден.',
@@ -36,7 +36,7 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'A flat 3% fee is deducted from the total pot of every match to support platform development and maintenance.': 'Фиксированная комиссия 3% вычитается из общего банка каждого матча для поддержки разработки и обслуживания платформы.',
     'This is a prototype. Games are simulated for demonstration. Do not use real funds yet.': 'Это прототип. Игры симулируются для демонстрации. Не используйте реальные средства.',
     'Challenge Friend': 'Вызвать друга', 'Enter your name or nickname': 'Введите имя или никнейм', 'This will be shown to your opponent': 'Это увидит ваш соперник', 'Continue': 'Продолжить', 'Copied!': 'Скопировано!', 'Challenge link copied to clipboard': 'Ссылка на вызов скопирована', 'Share this link with your friend to start the match.': 'Поделитесь этой ссылкой с другом, чтобы начать матч.', 'Done': 'Готово',
-    'Challenge': 'Вызов', 'Incoming Challenge': 'Входящий вызов', 'wants to play': 'хочет сыграть', 'Accept Challenge': 'Принять вызов', 'Wager': 'Ставка', 'Opponent': 'Соперник'
+    'Challenge': 'Вызов', 'Incoming Challenge': 'Входящий вызов', 'wants to play': 'хочет сыграть', 'Accept Challenge': 'Принять вызов', 'Wager': 'Ставка', 'Opponent': 'Соперник', 'Game': 'Игра', 'Challenge not found or expired': 'Вызов не найден или истек', 'Please ask your friend to create a new challenge.': 'Попросите друга создать новый вызов.', 'Wallet Not Connected': 'Кошелек не подключен', 'Please connect your wallet to accept the challenge.': 'Подключите кошелек, чтобы принять вызов.'
   },
   'es': {
     'Select Language': 'Seleccionar Idioma', 'Search language...': 'Buscar idioma...', 'No language found.': 'Idioma no encontrado.',
@@ -55,7 +55,7 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'A flat 3% fee is deducted from the total pot of every match to support platform development and maintenance.': 'Se deduce una tarifa fija del 3% del bote total de cada partida para apoyar el desarrollo y mantenimiento de la plataforma.',
     'This is a prototype. Games are simulated for demonstration. Do not use real funds yet.': 'Esto es un prototipo. Los juegos son simulados para demostración. No uses fondos reales todavía.',
     'Challenge Friend': 'Desafiar Amigo', 'Enter your name or nickname': 'Ingresa tu nombre o apodo', 'This will be shown to your opponent': 'Esto se mostrará a tu oponente', 'Continue': 'Continuar', 'Copied!': '¡Copiado!', 'Challenge link copied to clipboard': 'Enlace de desafío copiado al portapapeles', 'Share this link with your friend to start the match.': 'Comparte este enlace con tu amigo para comenzar la partida.', 'Done': 'Listo',
-    'Challenge': 'Desafío', 'Incoming Challenge': 'Desafío Entrante', 'wants to play': 'quiere jugar', 'Accept Challenge': 'Aceptar Desafío', 'Wager': 'Apuesta', 'Opponent': 'Oponente'
+    'Challenge': 'Desafío', 'Incoming Challenge': 'Desafío Entrante', 'wants to play': 'quiere jugar', 'Accept Challenge': 'Aceptar Desafío', 'Wager': 'Apuesta', 'Opponent': 'Oponente', 'Game': 'Juego', 'Challenge not found or expired': 'Desafío no encontrado o expirado', 'Please ask your friend to create a new challenge.': 'Pide a tu amigo que cree un nuevo desafío.', 'Wallet Not Connected': 'Billetera No Conectada', 'Please connect your wallet to accept the challenge.': 'Conecta tu billetera para aceptar el desafío.'
   },
   'he': {
     'Select Language': 'בחר שפה', 'Search language...': 'חפש שפה...', 'No language found.': 'לא נמצאה שפה.',
@@ -74,7 +74,7 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'A flat 3% fee is deducted from the total pot of every match to support platform development and maintenance.': 'עמלה קבועה של 3% מנוכה מסך הקופה של כל משחק לתמיכה בפיתוח ותחזוקת הפלטפורמה.',
     'This is a prototype. Games are simulated for demonstration. Do not use real funds yet.': 'זהו אב טיפוס. המשחקים מסומלצים להדגמה. אל תשתמש בכספים אמיתיים עדיין.',
     'Challenge Friend': 'אתגר חבר', 'Enter your name or nickname': 'הכנס שם או כינוי', 'This will be shown to your opponent': 'זה יוצג ליריב שלך', 'Continue': 'המשך', 'Copied!': 'הועתק!', 'Challenge link copied to clipboard': 'קישור האתגר הועתק ללוח', 'Share this link with your friend to start the match.': 'שתף קישור זה עם חברך כדי להתחיל את המשחק.', 'Done': 'סיים',
-    'Challenge': 'אתגר', 'Incoming Challenge': 'אתגר נכנס', 'wants to play': 'רוצה לשחק', 'Accept Challenge': 'קבל אתגר', 'Wager': 'הימור', 'Opponent': 'יריב'
+    'Challenge': 'אתגר', 'Incoming Challenge': 'אתגר נכנס', 'wants to play': 'רוצה לשחק', 'Accept Challenge': 'קבל אתגר', 'Wager': 'הימור', 'Opponent': 'יריב', 'Game': 'משחק', 'Challenge not found or expired': 'האתגר לא נמצא או פג תוקפו', 'Please ask your friend to create a new challenge.': 'בקש מחברך ליצור אתגר חדש.', 'Wallet Not Connected': 'ארנק לא מחובר', 'Please connect your wallet to accept the challenge.': 'אנא חבר את הארנק כדי לקבל את האתגר.'
   },
   'hi': {
     'Select Language': 'भाषा चुनें', 'Search language...': 'भाषा खोजें...', 'No language found.': 'कोई भाषा नहीं मिली।',
@@ -93,6 +93,6 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'A flat 3% fee is deducted from the total pot of every match to support platform development and maintenance.': 'प्लेटफ़ॉर्म विकास और रखरखाव का समर्थन करने के लिए प्रत्येक मैच के कुल पॉट से 3% शुल्क काटा जाता है।',
     'This is a prototype. Games are simulated for demonstration. Do not use real funds yet.': 'यह एक प्रोटोटाइप है। खेल प्रदर्शन के लिए सिम्युलेटेड हैं। अभी वास्तविक धन का उपयोग न करें।',
     'Challenge Friend': 'दोस्त को चुनौती दें', 'Enter your name or nickname': 'अपना नाम या उपनाम दर्ज करें', 'This will be shown to your opponent': 'यह आपके प्रतिद्वंद्वी को दिखाया जाएगा', 'Continue': 'जारी रखें', 'Copied!': 'कॉपी किया गया!', 'Challenge link copied to clipboard': 'चुनौती लिंक क्लिपबोर्ड पर कॉपी किया गया', 'Share this link with your friend to start the match.': 'मैच शुरू करने के लिए इस लिंक को अपने दोस्त के साथ साझा करें।', 'Done': 'पूर्ण',
-    'Challenge': 'चुनौती', 'Incoming Challenge': 'आने वाली चुनौती', 'wants to play': 'खेलना चाहता है', 'Accept Challenge': 'चुनौती स्वीकार करें', 'Wager': 'दांव', 'Opponent': 'प्रतिद्वंद्वी'
+    'Challenge': 'चुनौती', 'Incoming Challenge': 'आने वाली चुनौती', 'wants to play': 'खेलना चाहता है', 'Accept Challenge': 'चुनौती स्वीकार करें', 'Wager': 'दांव', 'Opponent': 'प्रतिद्वंद्वी', 'Game': 'खेल', 'Challenge not found or expired': 'चुनौती नहीं मिली या समाप्त हो गई', 'Please ask your friend to create a new challenge.': 'कृपया अपने दोस्त से नई चुनौती बनाने के लिए कहें।', 'Wallet Not Connected': 'वॉलेट कनेक्ट नहीं है', 'Please connect your wallet to accept the challenge.': 'कृपया चुनौती स्वीकार करने के लिए अपना वॉलेट कनेक्ट करें।'
   }
 };

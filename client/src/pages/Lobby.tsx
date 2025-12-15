@@ -96,7 +96,12 @@ export default function Lobby() {
     }
 
     if (isChallengeMode) {
-       const mockLink = `https://skills2crypto.com/challenge/${playerName.replace(/\s+/g, '-').toLowerCase()}-${Math.random().toString(36).substring(7)}`;
+       const params = new URLSearchParams({
+          game: state.selectedGame || 'Chess',
+          asset: state.selectedAsset,
+          stake: state.stakeAmount.toString()
+       });
+       const mockLink = `https://skills2crypto.com/challenge/${playerName.replace(/\s+/g, '-').toLowerCase()}-${Math.random().toString(36).substring(7)}?${params.toString()}`;
        setChallengeLink(mockLink);
        setShowChallengeLink(true);
        return;

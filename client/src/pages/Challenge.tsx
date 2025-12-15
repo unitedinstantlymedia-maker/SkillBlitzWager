@@ -1,46 +1,93 @@
 import { useRoute, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, Swords, User, Coins } from "lucide-react";
+import { ArrowLeft, Swords, User, Coins, Gamepad2, AlertCircle } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { Link } from "wouter";
 import { useState, useEffect } from "react";
+import { useGame } from "@/context/GameContext";
+import { Asset, Game } from "@/core/types";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Challenge() {
   const [match, params] = useRoute("/challenge/:challengeId");
   const [, setLocation] = useLocation();
   const { t } = useLanguage();
+  const { state, actions } = useGame();
+  const { toast } = useToast();
+  
   const [challengerName, setChallengerName] = useState("Unknown Player");
+  const [challengeData, setChallengeData] = useState<{
+    game?: string;
+    asset?: string;
+    stake?: string;
+  }>({});
+  const [isValid, setIsValid] = useState(true);
 
   useEffect(() => {
     if (match && params.challengeId) {
-      // Format: name-randomString
-      // We want to extract the name part.
-      // The name might contain hyphens, so we need to be careful.
-      // The random string was generated with Math.random().toString(36).substring(7) which is alphanumeric.
-      // Let's assume the last part after the last hyphen is the ID, and everything before is the name.
-      
+      // 1. Parse Name
       const parts = params.challengeId.split('-');
       if (parts.length > 1) {
-        // Remove the last part (random ID)
         parts.pop();
-        // Join the rest back together
         const name = parts.join(' ');
-        // Capitalize first letter of each word
         const formattedName = name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
         setChallengerName(formattedName);
       } else {
         setChallengerName(params.challengeId);
       }
+
+      // 2. Parse Query Params
+      const searchParams = new URLSearchParams(window.location.search);
+      const game = searchParams.get('game');
+      const asset = searchParams.get('asset');
+      const stake = searchParams.get('stake');
+
+      if (!game || !asset || !stake) {
+        setIsValid(false);
+      } else {
+        setChallengeData({ game, asset, stake });
+      }
     }
   }, [match, params]);
 
-  const handleAccept = () => {
-    // In a real app, this would verify the challenge and join the session.
-    // For mockup, we redirect to lobby or game.
-    // Let's redirect to Lobby for now so they can "pay" or "connect".
-    setLocation('/lobby');
+  const handleAccept = async () => {
+    if (!state.wallet.connected) {
+      toast({
+         title: t("Wallet Not Connected", "Wallet Not Connected"),
+         description: t("Please connect your wallet to accept the challenge.", "Please connect your wallet to accept the challenge."),
+         variant: "destructive"
+      });
+      await actions.connectWallet();
+      return;
+    }
+
+    if (challengeData.game && challengeData.asset && challengeData.stake) {
+       // Set context state
+       actions.selectGame(challengeData.game as Game);
+       actions.selectAsset(challengeData.asset as Asset);
+       actions.setStake(Number(challengeData.stake));
+       
+       // Simulate joining/locking funds
+       await actions.startSearch();
+       
+       // Redirect to play
+       setLocation(`/play/${challengeData.game.toLowerCase()}`);
+    }
   };
+
+  if (!isValid) {
+    return (
+       <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6 text-center">
+          <AlertCircle className="h-16 w-16 text-destructive" />
+          <h2 className="text-2xl font-bold">{t('Challenge not found or expired', 'Challenge not found or expired')}</h2>
+          <p className="text-muted-foreground">{t('Please ask your friend to create a new challenge.', 'Please ask your friend to create a new challenge.')}</p>
+          <Link href="/">
+             <Button>{t('Back to Home', 'Back to Home')}</Button>
+          </Link>
+       </div>
+    );
+  }
 
   return (
     <div className="space-y-8 flex flex-col items-center justify-center min-h-[60vh]">
@@ -73,9 +120,18 @@ export default function Challenge() {
         <div className="space-y-4 pt-4 border-t border-white/5">
            <div className="flex justify-between items-center bg-black/20 p-4 rounded-lg">
               <span className="text-muted-foreground flex items-center gap-2">
+                <Gamepad2 className="h-4 w-4" /> {t('Game', 'Game')}
+              </span>
+              <span className="font-mono font-bold text-lg">{challengeData.game}</span>
+           </div>
+
+           <div className="flex justify-between items-center bg-black/20 p-4 rounded-lg">
+              <span className="text-muted-foreground flex items-center gap-2">
                 <Coins className="h-4 w-4" /> {t('Wager', 'Wager')}
               </span>
-              <span className="font-mono font-bold text-xl">???</span>
+              <span className="font-mono font-bold text-xl text-primary text-glow">
+                {Number(challengeData.stake).toFixed(2)} {challengeData.asset}
+              </span>
            </div>
            
            <div className="flex justify-between items-center bg-black/20 p-4 rounded-lg">
@@ -90,7 +146,7 @@ export default function Challenge() {
           onClick={handleAccept}
           className="w-full h-16 text-xl font-display font-bold uppercase tracking-widest bg-primary text-primary-foreground hover:bg-primary/90 border-glow shadow-[0_0_30px_rgba(38,161,123,0.3)] hover:shadow-[0_0_50px_rgba(38,161,123,0.5)] transition-all"
         >
-          {t('Accept Challenge', 'Accept Challenge')}
+          {state.wallet.connected ? t('Accept Challenge', 'Accept Challenge') : t('Connect Wallet', 'Connect Wallet')}
         </Button>
       </Card>
     </div>
