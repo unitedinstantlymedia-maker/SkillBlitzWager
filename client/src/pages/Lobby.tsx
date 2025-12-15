@@ -235,7 +235,7 @@ export default function Lobby() {
              <div className="bg-card/50 border border-white/10 rounded-lg p-6 text-center space-y-4">
                 <div className="flex items-center justify-center gap-0.5 text-lg sm:text-xl font-display font-bold tracking-tight text-primary flex-wrap">
                   <span className="text-white">skills</span>
-                  <img src={logoImage} alt="2" className="h-6 w-6 object-contain -mt-1" />
+                  <img src={logoImage} alt="2" className="h-9 w-9 object-contain -mt-1 drop-shadow-[0_0_8px_rgba(255,255,255,0.6)]" />
                   <span className="text-white">crypto.com</span>
                   <span className="text-muted-foreground ml-0.5 truncate max-w-[150px]">/{challengeLink.split('/').pop()}</span>
                 </div>
