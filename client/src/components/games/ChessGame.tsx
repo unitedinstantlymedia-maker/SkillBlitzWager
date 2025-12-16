@@ -57,9 +57,7 @@ export function ChessGame({ onFinish }: { onFinish: (result: 'win' | 'loss' | 'd
     }
   };
 
-  const onDrop = ({ sourceSquare, targetSquare }: { sourceSquare: string, targetSquare: string | null }) => {
-    if (!targetSquare) return false;
-
+  const onDrop = (sourceSquare: string, targetSquare: string) => {
     try {
       const gameCopy = new Chess(game.fen());
       
@@ -91,17 +89,16 @@ export function ChessGame({ onFinish }: { onFinish: (result: 'win' | 'loss' | 'd
     <div className="flex flex-col items-center justify-center h-full w-full max-w-md mx-auto space-y-6 animate-in fade-in zoom-in-95 duration-500">
       <Card className="p-1 bg-black/40 border-primary/20 shadow-[0_0_30px_rgba(0,255,0,0.1)] backdrop-blur-sm rounded-lg overflow-hidden">
         <div className="w-full aspect-square">
+          {/* @ts-ignore - position prop exists in react-chessboard but types might be mismatching */}
           <Chessboard 
-            options={{
-              position: game.fen(),
-              onPieceDrop: onDrop,
-              boardOrientation: "white",
-              darkSquareStyle: { backgroundColor: 'rgba(34, 197, 94, 0.2)' },
-              lightSquareStyle: { backgroundColor: 'rgba(255, 255, 255, 0.1)' },
-              boardStyle: {
-                borderRadius: '4px',
-                boxShadow: '0 5px 15px rgba(0, 0, 0, 0.5)',
-              }
+            position={game.fen()}
+            onPieceDrop={onDrop}
+            boardOrientation="white"
+            customDarkSquareStyle={{ backgroundColor: 'rgba(34, 197, 94, 0.2)' }}
+            customLightSquareStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
+            customBoardStyle={{
+              borderRadius: '4px',
+              boxShadow: '0 0 20px rgba(34, 197, 94, 0.2)', // Neon green glow
             }}
           />
         </div>
