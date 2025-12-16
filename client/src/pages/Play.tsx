@@ -51,33 +51,35 @@ export default function Play() {
           </div>
         )}
         
-        {/* Prototype Controls Overlay - always visible for testing */}
-        <div className="absolute bottom-4 right-4 flex gap-2 bg-black/80 p-2 rounded-lg border border-white/10 backdrop-blur">
-          <Button 
-            size="sm" 
-            variant="default" 
-            className="bg-green-600 hover:bg-green-700 text-white h-8 px-3"
-            onClick={() => handleFinish('win')}
-          >
-            {t('Victory', 'Victory')}
-          </Button>
-          <Button 
-            size="sm" 
-            variant="outline" 
-            className="bg-yellow-500/80 hover:bg-yellow-600 text-white h-8 px-3 border-none"
-            onClick={() => handleFinish('draw')}
-          >
-            {t('Draw', 'Draw')}
-          </Button>
-          <Button 
-            size="sm" 
-            variant="destructive" 
-            className="h-8 px-3"
-            onClick={() => handleFinish('loss')}
-          >
-            {t('Defeat', 'Defeat')}
-          </Button>
-        </div>
+        {/* Prototype Controls Overlay - Hidden for Chess as it has auto-detection */}
+        {state.selectedGame !== 'Chess' && (
+          <div className="absolute bottom-4 right-4 flex gap-2 bg-black/80 p-2 rounded-lg border border-white/10 backdrop-blur z-50">
+            <Button 
+              size="sm" 
+              variant="default" 
+              className="bg-green-600 hover:bg-green-700 text-white h-8 px-3"
+              onClick={() => handleFinish('win')}
+            >
+              {t('Victory', 'Victory')}
+            </Button>
+            <Button 
+              size="sm" 
+              variant="outline" 
+              className="bg-yellow-500/80 hover:bg-yellow-600 text-white h-8 px-3 border-none"
+              onClick={() => handleFinish('draw')}
+            >
+              {t('Draw', 'Draw')}
+            </Button>
+            <Button 
+              size="sm" 
+              variant="destructive" 
+              className="h-8 px-3"
+              onClick={() => handleFinish('loss')}
+            >
+              {t('Defeat', 'Defeat')}
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
