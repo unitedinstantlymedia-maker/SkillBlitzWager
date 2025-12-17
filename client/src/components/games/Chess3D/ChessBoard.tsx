@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from '@react-three/drei';
+import { Text, Box } from '@react-three/drei';
 
 interface ChessBoardProps {
   onSquareClick: (square: string) => void;
@@ -12,6 +12,9 @@ const RANKS = ['1', '2', '3', '4', '5', '6', '7', '8'];
 
 export function ChessBoard({ onSquareClick, selectedSquare, possibleMoves }: ChessBoardProps) {
   const squares = [];
+  const boardSize = 8;
+  const squareSize = 1;
+  const offset = 3.5; // (8-1)/2
 
   for (let r = 0; r < 8; r++) {
     for (let c = 0; c < 8; c++) {
@@ -23,58 +26,120 @@ export function ChessBoard({ onSquareClick, selectedSquare, possibleMoves }: Che
       const isSelected = selectedSquare === squareName;
       const isPossibleMove = possibleMoves.includes(squareName);
 
-      // Position: centered at 0,0. Each square is 1 unit.
-      // x: c - 3.5
-      // z: -(r - 3.5)  (Chess ranks go 1-8 up, 3D Z usually goes down/forward)
-      // Let's align Rank 1 to positive Z or negative Z?
-      // Typically White is at Rank 1. Let's place Rank 1 at Z = 3.5 (closest to camera if camera is at +Z)
-      // So Rank 0 (in loop) -> '1' -> z = 3.5
-      // Rank 7 -> '8' -> z = -3.5
+      // r=0 -> Rank 1 (Back/Bottom) ? No. 
+      // Usually in array: 0 is 'a1' or 'a8'.
+      // If we want white at bottom (Rank 1 closest to camera):
+      // Camera is usually at +Z.
+      // Z increases towards camera.
+      // So Rank 1 should be at +Z. Rank 8 at -Z.
+      // Let's map r=0 to Rank 1.
       
-      const x = c - 3.5;
-      const z = -(r - 3.5); 
+      const x = c - offset;
+      const z = -(r - offset); // r=0 -> z=3.5 (Front), r=7 -> z=-3.5 (Back)
+      // Wait, standard loop r=0 usually means Rank 1 in my logic?
+      // Let's check RANKS array. RANKS[0] is '1'.
+      // So r=0 is Rank 1.
+      // Position Z:
+      // If r=0 (Rank 1), we want it closest to camera (+Z).
+      // So z should be positive.
+      // Let's use z = (3.5 - r) ? 
+      // r=0 -> 3.5. r=7 -> -3.5. Correct.
+      
+      // Fix Z logic:
+      // r=0 (Rank 1) -> z = 3.5
+      // r=7 (Rank 8) -> z = -3.5
+      // Correct formula: (3.5 - r)
+      
+      const posX = c - offset;
+      const posZ = 3.5 - r;
 
+      const color = isBlack ? '#769656' : '#eeeed2'; // Classic Green/Beige or Wood colors?
+      // User asked for "classic coordinate letters... alternating light/dark".
+      // Let's use a nice wood/dark theme or standard tournament green/white.
+      // "Wood or black edge".
+      // Let's use standard tournament colors: #769656 (Green) and #eeeed2 (Cream) are very standard.
+      // Or Wood: Dark #b58863, Light #f0d9b5.
+      // Let's go with Wood as requested "Realistic/Classic".
+      const woodDark = '#b58863';
+      const woodLight = '#f0d9b5';
+      
       squares.push(
-        <group key={squareName} position={[x, 0, z]}>
+        <group key={squareName} position={[posX, 0, posZ]}>
           <mesh 
             rotation={[-Math.PI / 2, 0, 0]} 
             onClick={(e) => { e.stopPropagation(); onSquareClick(squareName); }}
+            receiveShadow
           >
             <planeGeometry args={[1, 1]} />
             <meshStandardMaterial 
-              color={
-                isSelected ? '#ffff00' : 
-                isPossibleMove ? (isBlack ? '#1a4d1a' : '#2e8b2e') : // Highlight possible moves green
-                (isBlack ? '#111111' : '#222222')
-              } 
-              roughness={0.5}
-              metalness={0.5}
+              color={isBlack ? woodDark : woodLight} 
+              roughness={0.6}
+              metalness={0.1}
             />
           </mesh>
           
-          {/* Rank/File Labels on edges */}
-          {r === 0 && (
-             <Text position={[0, 0.01, 0.6]} rotation={[-Math.PI/2, 0, 0]} fontSize={0.3} color="white" anchorX="center" anchorY="middle">
-               {file}
-             </Text>
-          )}
-          {c === 0 && (
-             <Text position={[-0.6, 0.01, 0]} rotation={[-Math.PI/2, 0, 0]} fontSize={0.3} color="white" anchorX="center" anchorY="middle">
-               {rank}
-             </Text>
+          {/* Highlight for Move */}
+          {isPossibleMove && (
+            <mesh position={[0, 0.01, 0]} rotation={[-Math.PI/2, 0, 0]}>
+               {/* Classic: Just a small dot or subtle marker */}
+               {/* If piece on it? Ring. If empty? Dot. */}
+               {/* Simplified: Circle for now */}
+               <circleGeometry args={[0.15, 32]} />
+               <meshBasicMaterial color="rgba(0, 0, 0, 0.2)" transparent />
+            </mesh>
           )}
 
-          {/* Move Indicator Dot */}
-          {isPossibleMove && (
-            <mesh position={[0, 0.02, 0]} rotation={[-Math.PI/2, 0, 0]}>
-               <circleGeometry args={[0.2, 32]} />
-               <meshBasicMaterial color="rgba(0, 255, 0, 0.5)" transparent opacity={0.5} />
-            </mesh>
+          {/* Selected Square Highlight */}
+          {isSelected && (
+             <mesh position={[0, 0.01, 0]} rotation={[-Math.PI/2, 0, 0]}>
+               <planeGeometry args={[1, 1]} />
+               <meshBasicMaterial color="#bbcb2b" transparent opacity={0.5} />
+             </mesh>
           )}
         </group>
       );
     }
   }
 
-  return <group>{squares}</group>;
+  // Border / Frame
+  const frameThickness = 0.5;
+  const boardWidth = 8;
+  const totalWidth = boardWidth + frameThickness * 2;
+  
+  return (
+    <group>
+       {/* Main Board Squares */}
+       <group>{squares}</group>
+       
+       {/* Wooden Frame */}
+       <mesh position={[0, -0.25, 0]} receiveShadow>
+          <boxGeometry args={[totalWidth, 0.5, totalWidth]} />
+          <meshStandardMaterial color="#5c4033" roughness={0.8} />
+       </mesh>
+
+       {/* Coordinates */}
+       {FILES.map((f, i) => (
+         <Text 
+            key={`file-${f}`} 
+            position={[i - 3.5, 0.01, 4.2]} 
+            rotation={[-Math.PI/2, 0, 0]} 
+            fontSize={0.25} 
+            color="#f0d9b5"
+         >
+           {f}
+         </Text>
+       ))}
+       {RANKS.map((r, i) => (
+         <Text 
+            key={`rank-${r}`} 
+            position={[-4.2, 0.01, 3.5 - i]} 
+            rotation={[-Math.PI/2, 0, 0]} 
+            fontSize={0.25} 
+            color="#f0d9b5"
+         >
+           {r}
+         </Text>
+       ))}
+    </group>
+  );
 }
