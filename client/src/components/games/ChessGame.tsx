@@ -1,12 +1,50 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Chess } from 'chess.js';
 import { Chessboard } from 'react-chessboard';
 import { Card } from "@/components/ui/card";
 import { useLanguage } from "@/context/LanguageContext";
 
+const pieceImages: Record<string, string> = {
+  wK: "/chess-pieces/wK.svg",
+  wQ: "/chess-pieces/wQ.svg",
+  wR: "/chess-pieces/wR.svg",
+  wB: "/chess-pieces/wB.svg",
+  wN: "/chess-pieces/wN.svg",
+  wP: "/chess-pieces/wP.svg",
+  bK: "/chess-pieces/bK.svg",
+  bQ: "/chess-pieces/bQ.svg",
+  bR: "/chess-pieces/bR.svg",
+  bB: "/chess-pieces/bB.svg",
+  bN: "/chess-pieces/bN.svg",
+  bP: "/chess-pieces/bP.svg",
+};
+
 export function ChessGame({ onFinish }: { onFinish: (result: 'win' | 'loss' | 'draw') => void }) {
   const { t } = useLanguage();
   const [game, setGame] = useState(new Chess());
+
+  const customPieces = useMemo(() => {
+    const pieces = ['wK', 'wQ', 'wR', 'wB', 'wN', 'wP', 'bK', 'bQ', 'bR', 'bB', 'bN', 'bP'];
+    const pieceComponents: Record<string, ({ squareWidth }: { squareWidth: number }) => any> = {};
+    pieces.forEach((piece) => {
+      pieceComponents[piece] = ({ squareWidth }) => (
+        <img
+          src={pieceImages[piece]}
+          alt={piece}
+          style={{
+            width: squareWidth,
+            height: squareWidth,
+            objectFit: "contain",
+            pointerEvents: "none",
+            userSelect: "none",
+            filter: "drop-shadow(0 1px 4px #2224)",
+          }}
+          draggable={false}
+        />
+      );
+    });
+    return pieceComponents;
+  }, []);
 
   // Check game over conditions
   useEffect(() => {
@@ -49,6 +87,7 @@ export function ChessGame({ onFinish }: { onFinish: (result: 'win' | 'loss' | 'd
           position={game.fen()}
           onPieceDrop={onDrop}
           boardWidth={350}
+          customPieces={customPieces as any}
           customDarkSquareStyle={{ backgroundColor: 'rgba(34, 197, 94, 0.2)' }}
           customLightSquareStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
           customBoardStyle={{
