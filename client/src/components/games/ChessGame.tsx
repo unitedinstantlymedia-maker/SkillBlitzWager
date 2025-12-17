@@ -5,7 +5,7 @@ export function ChessGame({ onFinish }: { onFinish: (result: 'win' | 'loss') => 
   const { t } = useLanguage();
 
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black">
       <div className="w-full h-full relative">
         <Chess3DBoard />
       </div>

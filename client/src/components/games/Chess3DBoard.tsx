@@ -1,18 +1,16 @@
 import { Canvas } from '@react-three/fiber';
-import { useGLTF, OrbitControls, Stage, ContactShadows, Environment } from '@react-three/drei';
+import { useGLTF, OrbitControls, Stage, ContactShadows } from '@react-three/drei';
 import { Suspense } from 'react';
 import { Loader2 } from 'lucide-react';
 
 function Model(props: any) {
-  // Loading the specific GLB file requested
-  // Note: The filename has a space before .glb as verified in the file system
   const { scene } = useGLTF('/chess3d/chess-polycam-glb/source/Polycam auto shoot .glb');
   return <primitive object={scene} {...props} />;
 }
 
 export function Chess3DBoard() {
   return (
-    <div className="w-full h-full min-h-[400px] relative bg-gradient-to-b from-black/80 to-black/40 rounded-lg overflow-hidden border border-white/10">
+    <div className="w-full h-full relative bg-gradient-to-b from-black/80 to-black/40">
       <Suspense fallback={
         <div className="absolute inset-0 flex items-center justify-center text-primary">
           <div className="flex flex-col items-center gap-2">
@@ -42,7 +40,7 @@ export function Chess3DBoard() {
       </Suspense>
       
       {/* Overlay info */}
-      <div className="absolute bottom-4 left-0 right-0 text-center pointer-events-none z-10">
+      <div className="absolute bottom-24 left-0 right-0 text-center pointer-events-none z-10">
         <p className="text-[10px] text-white/30 font-mono uppercase tracking-widest">Interactive 3D Preview • Drag to Rotate</p>
       </div>
     </div>
